@@ -1,0 +1,16 @@
+.html, body{
+  margin: 0;
+}
+.header{
+  width:100%;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  display: flex;
+  align-items: flex-end;
+}
+
+.headeritem{
+  color:white;
+  margin: 0px 15px 0px 0px;
+}
