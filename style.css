@@ -14,3 +14,21 @@
   color:white;
   margin: 0px 15px 0px 0px;
 }
+.logo {
+  font-size: 3rem;
+  text-align: center;
+}
+
+/* Style for black text with white background */
+.logo span:nth-child(odd) {
+  color: black;
+  background-color: white;
+  padding: 5px;
+}
+
+/* Style for white text with black background */
+.logo span:nth-child(even) {
+  color: white;
+  background-color: black;
+  padding: 5px;
+}
