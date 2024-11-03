@@ -19,7 +19,6 @@
     <script>
     function replace_content(path){
       path = path || "home"
-      console.log(path)
       fetch("documents/"+path+".md").then(response => response.text())
         .then(text => document.getElementById('content')
           .innerHTML = marked.parse(text)) 
@@ -27,7 +26,6 @@
     }
     var r = new RegExp('^(?:[a-z+]+:)?//', 'i');
     document.addEventListener('click',e => {
-      e.preventDefault()
       const origin = e.target.closest('a')
       if(!origin){
         return
@@ -36,6 +34,7 @@
       if(r.test(ref)){
         return
       }
+      e.preventDefault()
       replace_content(ref)
     })
     replace_content(window.location.pathname.slice(1))
