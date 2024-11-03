@@ -1,6 +1,6 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
-with open('404.html', 'rb') as file:
+with open('index.html', 'rb') as file:
     data = file.read()
 class CustomHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
