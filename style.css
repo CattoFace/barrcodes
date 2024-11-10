@@ -1,34 +1,55 @@
 .html, body{
+  --main-bg: #EEEEEE;
+  --main-text: #111111;
   margin: 0;
+  background: var(--main-bg);
+  color: var(--main-text);
+  font-size: 16px;
+}
+.dark{
+  --main-bg: #111111;
+  --main-text : #EEEEEE;
 }
 .header{
   width:100%;
   margin: 0;
   padding: 0;
-  background-color: black;
+  background-color: #151515;
   display: flex;
   align-items: flex-end;
 }
 
 .headeritem{
-  color:white;
-  margin: 0px 15px 0px 0px;
+  color:#EEEEEE;
+  margin: 0 1% 0 1%;
 }
 .logo {
-  font-size: 3rem;
+  font-size: 2rem;
   text-align: center;
+  margin-left: 5%;
 }
-
-/* Style for black text with white background */
 .logo span:nth-child(odd) {
-  color: black;
-  background-color: white;
+  color: #111111;
+  background-color: #EEEEEE;
   padding: 5px;
 }
-
-/* Style for white text with black background */
 .logo span:nth-child(even) {
-  color: white;
-  background-color: black;
-  padding: 5px;
+  color: #EEEEEE;
+  background-color: #111111;
+  padding: 0 5px 0 5px;
+}
+.content{
+  margin: auto;
+  max-width: min(80%,1000px);
+  line-height: 1.6;
+}
+#toggle_dark{
+  background-color: var(--main-bg);
+  border: none;
+  color: var(--main-text);
+  text-align: center;
+  display: inline-block;
+  align-self: center;
+  margin-left: auto;
+  margin-right: 2%;
 }
