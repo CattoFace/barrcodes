@@ -38,7 +38,7 @@
   background-color: #111111;
   padding: 0 5px 0 5px;
 }
-.content{
+#content{
   margin: auto;
   max-width: min(80%,1000px);
   line-height: 1.6;
