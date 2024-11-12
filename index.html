@@ -27,6 +27,7 @@
     if(localStorage.getItem("light_mode")==="true") toggle_theme();
     const cache = new Map()
     function get_document(doc_name){
+      doc_name = doc_name || "home"
       let doc = cache.get(doc_name)
       if(!doc){
         doc = fetch("documents/"+doc_name+".md").then(response => response.text()).then(text=>doc = marked.parse(text))
@@ -52,8 +53,7 @@
       let doc_name = origin.getAttribute("href")
       if(r.test(doc_name)) return; // not a relative link
       e.preventDefault() // relative links do not actually load a new webpage
-      if(window.location.pathname.slice(1)==doc_name) return; // already on that page
-      doc_name = doc_name || "home" 
+      if((window.location.pathname.slice(1) || "home")==doc_name) return; // already on that page
       replace_content(doc_name)
       history.pushState({},"",doc_name)
     })
@@ -63,7 +63,6 @@
       let doc_name = origin.getAttribute("href")
       if(r.test(doc_name)) return; // not a relative link
       if(window.location.pathname.slice(1)==doc_name) return; // already on that page
-      doc_name = doc_name || "home" 
       get_document(doc_name)
     })
     onpopstate = (event) => replace_content(window.location.pathname.slice(1)) // handle back button
