@@ -24,19 +24,17 @@
   margin: 0 1% 0 1%;
 }
 .logo {
-  font-size: 2rem;
+  font-size: 1.7rem;
   text-align: center;
   margin-left: 5%;
 }
 .logo span:nth-child(odd) {
   color: #111111;
   background-color: #EEEEEE;
-  padding: 5px;
 }
 .logo span:nth-child(even) {
   color: #EEEEEE;
   background-color: #111111;
-  padding: 0 5px 0 5px;
 }
 #content{
   margin: auto;
@@ -48,7 +46,7 @@
   border: none;
   color: var(--main-text);
   text-align: center;
-  display: inline-block;
+  /*display: inline-block;*/
   align-self: center;
   margin-left: auto;
   margin-right: 2%;
