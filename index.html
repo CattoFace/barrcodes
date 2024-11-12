@@ -8,53 +8,66 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.min.js"></script>
     </head>
   <body>
-    <header class="header"c>
+    <header class="header">
     <div class="logo headeritem">
     <span>B</span><span>a</span><span>r</span><span>r</span><span>C</span><span>o</span><span>d</span><span>e</span><span>s</span>
     </div>
       <a class="headeritem" href="home">Home</a>
       <a class="headeritem" href="about">About</a>
-      <button id="toggle_dark" onclick="document.body.classList.toggle('dark')">Toggle Dark</button>
+      <button id="toggle_theme" onclick="toggle_theme()">Dark Theme</button>
     </header>
     <div id="content"></div>
     <script>
+    let theme_button = document.getElementById("toggle_theme")
+    function toggle_theme(){
+      const light = document.body.classList.toggle("light")
+      theme_button.textContent= light?"Light Theme":"Dark Theme"
+      localStorage.setItem('light_mode',light)
+    }
+    if(localStorage.getItem("light_mode")==="true") toggle_theme();
     const cache = new Map()
-    async function get_document(doc_name){
+    function get_document(doc_name){
       let doc = cache.get(doc_name)
       if(!doc){
-        await fetch("documents/"+doc_name+".md").then(response => response.text()).then(text=>doc = marked.parse(text))
-        cache.set(doc_name,doc)
+        doc = fetch("documents/"+doc_name+".md").then(response => response.text()).then(text=>doc = marked.parse(text))
+        cache.set(doc_name,doc) // doc is a future until resolved by replace_content
       }
       return doc
     }
-    function replace_content(path){
-      path = path || "home"
-      get_document(path).then(doc=>{
+    function replace_content(doc_name){
+      let doc = get_document(doc_name)
+      if(doc instanceof Promise){ // if promise, convert to actual doc and save
+        doc.then(resolved=>{
+          cache.set(doc_name,resolved)
+          document.getElementById('content').innerHTML = resolved
+        })
+      }else{
         document.getElementById('content').innerHTML = doc
-      })
+      }
     }
-    var r = new RegExp('^(?:[a-z+]+:)?//', 'i');
+    var r = new RegExp('^(?:[a-z+]+:)?//', 'i'); // check for relative link
     document.addEventListener('click',e => {
       const origin = e.target.closest('a')
       if(!origin) return; // not a link
-      const ref = origin.getAttribute("href")
-      if(r.test(ref)) return; // not a relative link
-      e.preventDefault()
-      if(window.location.pathname.slice(1)==ref) return; // already on that page
-      replace_content(ref)
-      history.pushState({},"",ref)
+      let doc_name = origin.getAttribute("href")
+      if(r.test(doc_name)) return; // not a relative link
+      e.preventDefault() // relative links do not actually load a new webpage
+      if(window.location.pathname.slice(1)==doc_name) return; // already on that page
+      doc_name = doc_name || "home" 
+      replace_content(doc_name)
+      history.pushState({},"",doc_name)
     })
     document.addEventListener('mouseover', e=>{
       const origin = e.target.closest('a')
       if(!origin) return; // not a link
-      const ref = origin.getAttribute("href")
-      if(r.test(ref)) return; // not a relative link
-      e.preventDefault()
-      if(window.location.pathname.slice(1)==ref) return; // already on that page
-      get_document(ref);
+      let doc_name = origin.getAttribute("href")
+      if(r.test(doc_name)) return; // not a relative link
+      if(window.location.pathname.slice(1)==doc_name) return; // already on that page
+      doc_name = doc_name || "home" 
+      get_document(doc_name)
     })
-    onpopstate = (event) => replace_content(window.location.pathname.slice(1))
-    replace_content(window.location.pathname.slice(1))
+    onpopstate = (event) => replace_content(window.location.pathname.slice(1)) // handle back button
+    replace_content(window.location.pathname.slice(1)) // load current doc
     </script>
   </body>
 </html>

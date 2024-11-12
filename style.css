@@ -1,14 +1,19 @@
 .html, body{
-  --main-bg: #EEEEEE;
-  --main-text: #111111;
+  --main-bg: #111111;
+  --main-text: #EEEEEE;
+  --link-color: steelblue;
   margin: 0;
   background: var(--main-bg);
   color: var(--main-text);
   font-size: 16px;
 }
-.dark{
-  --main-bg: #111111;
-  --main-text : #EEEEEE;
+.light{
+  --main-bg: #EEEEEE;
+  --main-text: #111111;
+  --link-color: darkblue;
+}
+a{
+  color: var(--link-color)
 }
 .header{
   width:100%;
@@ -41,7 +46,7 @@
   max-width: min(80%,1000px);
   line-height: 1.6;
 }
-#toggle_dark{
+#toggle_theme{
   background-color: var(--main-bg);
   border: none;
   color: var(--main-text);
