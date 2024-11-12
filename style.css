@@ -1,3 +1,4 @@
+
 .html, body{
   --main-bg: #111111;
   --main-text: #EEEEEE;
@@ -29,16 +30,18 @@ a{
   margin: 0 1% 0 1%;
 }
 .logo {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   text-align: center;
   margin-left: 5%;
 }
 .logo span:nth-child(odd) {
   color: #111111;
+  padding: 100% 0 0 0;
   background-color: #EEEEEE;
 }
 .logo span:nth-child(even) {
   color: #EEEEEE;
+  padding: 100% 0 0 0;
   background-color: #111111;
 }
 #content{
@@ -51,7 +54,6 @@ a{
   border: none;
   color: var(--main-text);
   text-align: center;
-  /*display: inline-block;*/
   align-self: center;
   margin-left: auto;
   margin-right: 2%;

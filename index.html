@@ -14,14 +14,14 @@
     </div>
       <a class="headeritem" href="home">Home</a>
       <a class="headeritem" href="about">About</a>
-      <button id="toggle_theme" onclick="toggle_theme()">Dark Theme</button>
+      <button id="toggle_theme" onclick="toggle_theme()">Dark<br/>Theme</button>
     </header>
     <div id="content"></div>
     <script>
     let theme_button = document.getElementById("toggle_theme")
     function toggle_theme(){
       const light = document.body.classList.toggle("light")
-      theme_button.textContent= light?"Light Theme":"Dark Theme"
+      theme_button.innerHTML= light?"Light<br/>Theme":"Dark<br/>Theme"
       localStorage.setItem('light_mode',light)
     }
     if(localStorage.getItem("light_mode")==="true") toggle_theme();
