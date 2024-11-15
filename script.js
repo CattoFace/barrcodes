@@ -6,7 +6,6 @@ function toggle_theme() { // toggle between dark and light theme(default dark)
   theme_button.innerHTML = light ? "Light<br/>Theme" : "Dark<br/>Theme"
   localStorage.setItem('light_mode', light)
 }
-if (localStorage.getItem("light_mode") === "true") toggle_theme(); // load saved theme
 function get_document(doc_name) { // download the requested document if it is not already in cache
   doc_name = doc_name || "home"
   let doc = cache.get(doc_name)
@@ -52,5 +51,6 @@ onpopstate = (_) => replace_content(window.location.pathname.slice(1)) // handle
 window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")
+  if (localStorage.getItem("light_mode") === "true") toggle_theme(); // load saved theme
   replace_content(window.location.pathname.slice(1)) // load current doc
 })
