@@ -1,6 +1,6 @@
 const cache = new Map()
-const content_div = document.getElementById("content")
-const theme_button = document.getElementById("toggle_theme")
+let content_div = undefined
+let theme_button = undefined
 function toggle_theme() { // toggle between dark and light theme(default dark)
   const light = document.body.classList.toggle("light")
   theme_button.innerHTML = light ? "Light<br/>Theme" : "Dark<br/>Theme"
@@ -16,7 +16,9 @@ function get_document(doc_name) { // download the requested document if it is no
   }
   return doc
 }
+get_document(window.location.pathname.slice(1)) // start fetching the current document so it's ready when the DOM loads
 function replace_content(doc_name) { // replace the content with the requested document
+  doc_name = doc_name || "home"
   let doc = get_document(doc_name)
   if (doc instanceof Promise) { // if promise, convert to actual doc and save
     doc.then(resolved => {
@@ -43,8 +45,12 @@ document.addEventListener('mouseover', e => { // start fetching document on hove
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name)) return; // not a relative link
-  if (window.location.pathname.slice(1) == doc_name) return; // already on that page
+  if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
   get_document(doc_name)
 })
 onpopstate = (_) => replace_content(window.location.pathname.slice(1)) // handle back button
-replace_content(window.location.pathname.slice(1)) // load current doc
+window.addEventListener("DOMContentLoaded", _ => {
+  content_div = document.getElementById("content")
+  theme_button = document.getElementById("toggle_theme")
+  replace_content(window.location.pathname.slice(1)) // load current doc
+})
