@@ -29,7 +29,7 @@ A little bit of browsing and picking fonts and we've got the page you're looking
 I'm sure most would agree with me that writing Markdown is much nicer than writing articles directly in HTML so what I need is some way to convert a Markdown file to an HTML file.  
 An earlier version of this site used a very useful JS library called [marked.js](https://marked.js.org/) which can parse and convert the Markdown on the client-side browser.  
 I later decided to save everyone else the little computation it costs and convert it on my side with another useful tool called [Pandoc](https://pandoc.org/), which can convert between a huge amount of text formats in the CLI.  
-To convert all of the documents easily, I wrote a git pre-commit hook(surprisingly simple, simply write a bash script and save it as .git/hooks/pre-commit) and to check if any of the Markdown files were modified later than their HTML counterparts, and convert it if it was. A very simple and effective system:  
+To convert all of the documents easily, I wrote a git pre-commit hook(surprisingly simple, simply write a bash script and save it as .git/hooks/pre-commit) to check if any of the Markdown files were modified later than their HTML counterparts, and convert it if it was. A very simple and effective system:  
 ```bash
 #!/bin/bash
 for md in documents/*.md; do
