@@ -10,11 +10,11 @@ It can’t be that hard to write a basic blog without one, right?</p>
 <h2 id="the-skeleton">The Skeleton</h2>
 <p>At it’s core, a blog is just one page with different chunks of text
 in the middle of the header-footer sandwich, so ideally, I will only
-need to write a single webpage. My HTML/CSS experience can be summed up
-by “I know that I need wrap text in <code>&lt;div&gt;</code> and use
-Flexbox” so with some help from Google(mostly for making divs and the
-logo behave with CSS…), and I’ve got the basic body that should suffice
-for all of my needs:</p>
+need to write a single webpage.<br />
+My HTML/CSS experience can be summed up by “I know that I need wrap text
+in <code>&lt;div&gt;</code> and use Flexbox” so with some help from
+Google(mostly for making divs and the logo behave with CSS…), and I’ve
+got the basic body that should suffice for all of my needs:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">header</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;header&quot;</span><span class="dt">&gt;</span></span>
@@ -37,18 +37,19 @@ role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="fetching-some-documents">Fetching Some Documents</h2>
 <p>I’m sure most would agree with me that writing Markdown is much nicer
 than writing articles directly in HTML so what I need is some way to
-convert a Markdown file to an HTML file. An earlier version of this site
-used a very useful JS library called <a
+convert a Markdown file to an HTML file.<br />
+An earlier version of this site used a very useful JS library called <a
 href="https://marked.js.org/">marked.js</a> which can parse and convert
-the Markdown on the client-side browser. I later decided to save
-everyone else the little computation it costs and convert it on my side
-with another useful tool called <a
+the Markdown on the client-side browser.<br />
+I later decided to save everyone else the little computation it costs
+and convert it on my side with another useful tool called <a
 href="https://pandoc.org/">Pandoc</a>, which can convert between a huge
-amount of text formats in the CLI. To convert all of the documents
-easily, I wrote a git pre-commit hook(surprisingly simple, simply write
-a bash script and save it as .git/hooks/pre-commit) and to check if any
-of the Markdown files were modified later than their HTML counterparts,
-and convert it if it was. A very simple and effective system:</p>
+amount of text formats in the CLI.<br />
+To convert all of the documents easily, I wrote a git pre-commit
+hook(surprisingly simple, simply write a bash script and save it as
+.git/hooks/pre-commit) and to check if any of the Markdown files were
+modified later than their HTML counterparts, and convert it if it was. A
+very simple and effective system:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> md <span class="kw">in</span> documents/<span class="pp">*</span>.md<span class="kw">;</span> <span class="cf">do</span></span>
@@ -60,11 +61,12 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
 <p>Now that I have the documents ready in their own folder, I need to
-put them inside the actual website, now comes the more interesting part:
+put them inside the actual website, now comes the more interesting
+part:<br />
 The plan is to listen to any links clicked, and if they are linking to
 another article within the website, simple fetch and replace the body of
-the page instead of loading an entirely new one. A minimal solution to
-this is not hard at all:</p>
+the page instead of loading an entirely new one.<br />
+A minimal solution to this is not hard at all:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>content_div <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&quot;content&quot;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replace_content</span>(doc_name) { <span class="co">// replace the content with the requested document</span></span>
@@ -87,8 +89,9 @@ the extension, or the # used in reference links<a href="#fn2"
 class="footnote-ref" id="fnref2"
 role="doc-noteref"><sup>2</sup></a>.<br />
 Now every relative link on the website will fetch and replace like
-planned. Of course, I need to load something when simply navigating into
-the website so I added a single line to the script to handle that:</p>
+planned.<br />
+Of course, I need to load something when simply navigating into the
+website so I added a single line to the script to handle that:</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_content</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="op">||</span> <span class="st">&quot;home&quot;</span>) <span class="co">// load current doc</span></span></code></pre></div>
 <p>But of course, this is not the end, this solution has multiple things
@@ -102,8 +105,8 @@ cached.</li>
 <li>It can go faster</li>
 </ul>
 <h2 id="improving-things">Improving Things:</h2>
-<p>Solving the backwards bug is not hard, after a quick google search, I
-learned I simply need to listen to the <code>popstate</code> event that
+<p>After a quick google search, I learned that so solve the backwards
+bug, I simply need to listen to the <code>popstate</code> event that
 happens when a browser goes back, and set the right document
 content:</p>
 <div class="sourceCode" id="cb5"><pre
@@ -128,14 +131,16 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-
 <h2 id="going-faster">Going Faster</h2>
 <p>This section takes the idea from the now famous <a
 href="https://www.reddit.com/r/programming/comments/1g75r84/how_is_this_website_so_fast_breaking_down_the/">McMASTER-CARR</a>
-website. The easiest way to get to a new article faster is to simply
-start loading it earlier, usually we start loading a web page once a
-user clicks a link, but we can do better. Before a user clicks a link,
-they will almost certainly hover over it(unless they tabbed into it with
-their keyboard), and that gives us a heads-up that the user
-<em>might</em> navigate tho that page, and that’s what this section
-exploits. By listening to the <code>mouseover</code> event, I can start
-fetching a document before the user clicks the link:</p>
+website.<br />
+The easiest way to get to a new article faster is to simply start
+loading it earlier, usually we start loading a web page once a user
+clicks a link, but we can do better.<br />
+Before a user clicks a link, they will almost certainly hover over
+it(unless they tabbed into it with their keyboard), and that gives us a
+heads-up that the user <em>might</em> navigate tho that page, and that’s
+what this section exploits.<br />
+By listening to the <code>mouseover</code> event, I can start fetching a
+document before the user clicks the link:</p>
 <div class="sourceCode" id="cb7"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">prefetch</span>(doc_name) { <span class="co">// download the requested document if it is not already in cache</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc <span class="op">=</span> cache<span class="op">.</span><span class="fu">get</span>(doc_name)</span>
@@ -157,9 +162,10 @@ immediately, there’s a good chance the fetch will not finish and
 <code>replace_content</code> will start a second fetch, which will both
 cause him to download the document twice(think of all those precious
 bytes!) and more importantly, throw away the small time advantage we
-gained by fetching early. To solve this issue, I decided to simply store
-the fetch <code>Promise</code> in the cache when the user hovers over
-the link, and let <code>replace_content</code> check if it’s a
+gained by fetching early.<br />
+To solve this issue, I decided to simply store the fetch
+<code>Promise</code> in the cache when the user hovers over the link,
+and let <code>replace_content</code> check if it’s a
 <code>Promise</code> or an actual document and behave accordingly:</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">get_document</span>(doc_name) { <span class="co">// download the requested document if it is not already in cache</span></span>
@@ -189,8 +195,9 @@ script.</p>
 we can improve upon:</p>
 <h3 id="dark-theme">Dark Theme</h3>
 <p>Everyone likes a dark theme option for a website(ideally by default),
-and it’s not hard to implement at all, so here I go. All that is needed
-is a button that toggles a boolean, and a few CSS properties:</p>
+and it’s not hard to implement at all, so here I go.<br />
+All that is needed is a button that toggles a boolean, and a few CSS
+properties:</p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode html"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">header</span><span class="dt">&gt;</span>...<span class="dt">&lt;</span><span class="kw">button</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;toggle_theme&quot;</span><span class="ot"> onclick</span><span class="op">=</span><span class="st">&quot;toggle_theme()&quot;</span><span class="dt">&gt;</span>Dark<span class="dt">&lt;</span><span class="kw">br</span><span class="dt">/&gt;</span>Theme<span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;&lt;/</span><span class="kw">header</span><span class="dt">&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre
@@ -238,11 +245,12 @@ probably explain what is the best practice for this.</p>
 <p>Finally, I need to actually host this website somewhere, I decided to
 go with <a href="https://pages.cloudflare.com/">Cloudflare Pages</a>, I
 already use them for my other domain(just for DNS) and I have no
-complaints. There is not much to talk about that isn’t in their getting
-started documentation, I connected the GitHub repository and now every
-push to the preview or production branches and Cloudflare automatically
+complaints.<br />
+There is not much to talk about that isn’t in their getting started
+documentation, I connected the GitHub repository and now every push to
+the preview or production branches and Cloudflare automatically
 redeploys the website(which only includes cloning it and distributing it
-over their network, since this is a static website)</p>
+over their network, since this is a static website).</p>
 <h2 id="summary">Summary</h2>
 <p>As expected, I don’t actually need any framework or even dependencies
 to build a basic blog, or even a lot of JavaScript, the <a
@@ -252,8 +260,9 @@ id="fnref3" role="doc-noteref"><sup>3</sup></a><br />
 Sure, it could be nicer, it could have a dynamic home page that doesn’t
 need to be updated when a new article is publisher, it could have a
 comments system so other people can more easily send feedback(at the
-time of writing, I guess you can email me). Maybe it <em>will</em> be
-nicer in the future, but for now, this is all I need.</p>
+time of writing, I guess you can email me).<br />
+Maybe it <em>will</em> be nicer in the future, but for now, this is all
+I need.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
