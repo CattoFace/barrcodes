@@ -1,10 +1,14 @@
-# Building a blog in 2024 with 54 lines of JavaScript
-<h4 style="text-align: right"> 2024-11-17 </h4>
-For a long time I wanted to write more code, but didn't have a good reason to.  
-Now I have a solution: dump it all on a blog, maybe someone can learn something from it.  
-I'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm pretty allergic to frameworks.  
-It can't be that hard to write a basic blog without one, right?
-
+---
+title: Building a blog in 2024 with 54 lines of JavaScripts
+author: Barr
+date: 2024-11-17
+description: My “Hello World” post about how I made this blog with no frameworks and dependencies
+abstract: |
+  For a long time I wanted to write more code, but didn't have a good reason to.  
+  Now I have a solution: dump it all on a blog, maybe someone can learn something from it.  
+  I'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm pretty allergic to frameworks.  
+  It can't be that hard to write a basic blog without one, right?
+---
 ## The Skeleton
 At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to manually write a single webpage.  
 My HTML/CSS experience can be summed up by "I know that I need wrap text in `<div>` and use Flexbox" so with some help from Google(mostly for making divs and the logo behave with CSS...), and I've got the basic body that should suffice for all of my needs:

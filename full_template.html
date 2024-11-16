@@ -5,7 +5,6 @@
     <link rel="preload" href="highlight.css" as="style"/>
     <link rol="preload" href="script.js" as="script"/>
     <script src="script.js"></script>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_fjbvMwCp504jAa1ZL7.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="https://fonts.gstatic.com/s/electrolize/v18/cIf5Ma1dtE0zSiGSiED7AXEBuI8.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="stylesheet" href="style.css"/>
@@ -24,7 +23,7 @@ $endif$
 $if(description-meta)$
   <meta name="description" content="$description-meta$" />
 $endif$
-  <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+<title>BarrCodes - $pagetitle$</title>
 </head>
 <body>
 <header class="header">
@@ -37,19 +36,15 @@ $endif$
 </header>
 <div id="content">
 $if(title)$
-<h1 class="title">$title$</h1>
+<h1 id="title" class="title">$title$</h1>
 $if(subtitle)$
 <p class="subtitle">$subtitle$</p>
 $endif$
-$for(author)$
-<p class="author">$author$</p>
-$endfor$
 $if(date)$
-<p class="date">$date$</p>
+<h4 style="text-align: right" class="date">$date$</h4>
 $endif$
 $if(abstract)$
 <div class="abstract">
-<div class="abstract-title">$abstract-title$</div>
 $abstract$
 </div>
 $endif$

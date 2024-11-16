@@ -1,0 +1,24 @@
+$if(title)$
+<h1 id="title" class="title">$title$</h1>
+$if(subtitle)$
+<p class="subtitle">$subtitle$</p>
+$endif$
+$if(date)$
+<h4 style="text-align: right" class="date">$date$</h4>
+$endif$
+$if(abstract)$
+<div class="abstract">
+$abstract$
+</div>
+$endif$
+$endif$
+$if(toc)$
+<nav id="$idprefix$TOC" role="doc-toc">
+$if(toc-title)$
+<h2 id="$idprefix$toc-title">$toc-title$</h2>
+$endif$
+$table-of-contents$
+</nav>
+$endif$
+$body$
+</div>

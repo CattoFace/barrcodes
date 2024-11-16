@@ -5,14 +5,16 @@
     <link rel="preload" href="highlight.css" as="style"/>
     <link rol="preload" href="script.js" as="script"/>
     <script src="script.js"></script>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_fjbvMwCp504jAa1ZL7.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="https://fonts.gstatic.com/s/electrolize/v18/cIf5Ma1dtE0zSiGSiED7AXEBuI8.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet" href="highlight.css"/>
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>blog-building</title>
+  <meta name="author" content="Barr" />
+  <meta name="dcterms.date" content="2024-11-17" />
+  <meta name="description" content="My “Hello World” post about how I made this blog with no frameworks and dependencies" />
+<title>BarrCodes - Building a blog in 2024 with 54 lines of JavaScripts</title>
 </head>
 <body>
 <header class="header">
@@ -24,11 +26,10 @@
   <button id="toggle_theme" onclick="toggle_theme()">Dark<br/>Theme</button>
 </header>
 <div id="content">
-<h1 id="building-a-blog-in-2024-with-54-lines-of-javascript">Building a
-blog in 2024 with 54 lines of JavaScript</h1>
-<h4 style="text-align: right">
-2024-11-17
-</h4>
+<h1 id="title" class="title">Building a blog in 2024 with 54 lines of
+JavaScripts</h1>
+<h4 style="text-align: right" class="date">2024-11-17</h4>
+<div class="abstract">
 <p>For a long time I wanted to write more code, but didn’t have a good
 reason to.<br />
 Now I have a solution: dump it all on a blog, maybe someone can learn
@@ -36,6 +37,7 @@ something from it.<br />
 I’m not a big fan of front-end design, JavaScript, and bloat in general,
 so I’m pretty allergic to frameworks.<br />
 It can’t be that hard to write a basic blog without one, right?</p>
+</div>
 <h2 id="the-skeleton">The Skeleton</h2>
 <p>At it’s core, a blog is just one page with different chunks of text
 in the middle of the header-footer sandwich, so ideally, I will only
