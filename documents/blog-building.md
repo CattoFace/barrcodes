@@ -1,4 +1,5 @@
 # Building a blog in 2024 with 54 lines of JavaScript
+<h4 style="text-align: right"> 2024-11-17 </h4>
 For a long time I wanted to write more code, but didn't have a good reason to.  
 Now I have a solution: dump it all on a blog, maybe someone can learn something from it.  
 I'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm pretty allergic to frameworks.  
@@ -23,7 +24,7 @@ My HTML/CSS experience can be summed up by "I know that I need wrap text in `<di
   </body>
 ```
 The SVG paths were copied from Bootstrap's massive library of SVG icons.
-A little bit of browsing and picking fonts and we've got the page you're looking at now(unless I changed is a lot since the time of writing)[^1]
+A little bit of browsing and picking fonts and we've got the page you're looking at now(unless I changed it since the time of writing)[^1]
 
 ## Fetching Some Documents
 I'm sure most would agree with me that writing Markdown is much nicer than writing articles directly in HTML so what I need is some way to convert a Markdown file to an HTML file.  
@@ -33,7 +34,7 @@ To convert all of the documents easily, I wrote a git pre-commit hook(surprising
 ```bash
 #!/bin/bash
 for md in documents/*.md; do
-  html=${md%.*}.html
+  html=${md::-3}.html
   if [ $md -nt $html ]; then
     echo "Updating $html" && pandoc $md -o $html && git add $html
   else
@@ -187,6 +188,11 @@ I was not actually able to measure a statistically significant difference from t
 ## Deployment
 Finally, I need to actually host this website somewhere, I decided to go with [Cloudflare Pages](https://pages.cloudflare.com/), I already use them for my other domain(just for DNS) and I have no complaints.  
 There is not much to talk about that isn't in their getting started documentation, I connected the GitHub repository and now every push to the preview or production branches and Cloudflare automatically redeploys the website(which only includes cloning it and distributing it over their network, since this is a static website).
+One noteworthy thing is that Cloudflare has 2 useful default routing rules:  
+index.html and 404.html will be used as fallback for missing routes, in my case:  
+Every webpage(which are all directly from the root, i.e /blog-building) will get the same /index.html.
+And every invalid document(from the route /documents/*) will get the same /documents/404.html
+The only difference between using index.html and 404.html is that they return 200 and 404 codes respectively.
 
 ## Summary
 As expected, I don't actually need any framework or even dependencies to build a basic blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 54 lines long, without any unreadable minification.[^3]  

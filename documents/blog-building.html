@@ -1,5 +1,8 @@
 <h1 id="building-a-blog-in-2024-with-54-lines-of-javascript">Building a
 blog in 2024 with 54 lines of JavaScript</h1>
+<h4 style="text-align: right">
+2024-11-17
+</h4>
 <p>For a long time I wanted to write more code, but didn’t have a good
 reason to.<br />
 Now I have a solution: dump it all on a blog, maybe someone can learn
@@ -31,8 +34,8 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span></code></pre></div>
 <p>The SVG paths were copied from Bootstrap’s massive library of SVG
 icons. A little bit of browsing and picking fonts and we’ve got the page
-you’re looking at now(unless I changed is a lot since the time of
-writing)<a href="#fn1" class="footnote-ref" id="fnref1"
+you’re looking at now(unless I changed it since the time of writing)<a
+href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="fetching-some-documents">Fetching Some Documents</h2>
 <p>I’m sure most would agree with me that writing Markdown is much nicer
@@ -53,7 +56,7 @@ very simple and effective system:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> md <span class="kw">in</span> documents/<span class="pp">*</span>.md<span class="kw">;</span> <span class="cf">do</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">html</span><span class="op">=</span><span class="va">${md</span><span class="op">%</span>.<span class="pp">*</span><span class="va">}</span>.html</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">html</span><span class="op">=</span><span class="va">${md</span><span class="op">::</span>-<span class="dv">3</span><span class="va">}</span>.html</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="va">$md</span> <span class="ot">-nt</span> <span class="va">$html</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;Updating </span><span class="va">$html</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span> <span class="ex">pandoc</span> <span class="va">$md</span> <span class="at">-o</span> <span class="va">$html</span> <span class="kw">&amp;&amp;</span> <span class="fu">git</span> add <span class="va">$html</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
@@ -251,7 +254,15 @@ There is not much to talk about that isn’t in their getting started
 documentation, I connected the GitHub repository and now every push to
 the preview or production branches and Cloudflare automatically
 redeploys the website(which only includes cloning it and distributing it
-over their network, since this is a static website).</p>
+over their network, since this is a static website). One noteworthy
+thing is that Cloudflare has 2 useful default routing rules:<br />
+index.html and 404.html will be used as fallback for missing routes, in
+my case:<br />
+Every webpage(which are all directly from the root, i.e /blog-building)
+will get the same /index.html. And every invalid document(from the route
+/documents/*) will get the same /documents/404.html The only difference
+between using index.html and 404.html is that they return 200 and 404
+codes respectively.</p>
 <h2 id="summary">Summary</h2>
 <p>As expected, I don’t actually need any framework or even dependencies
 to build a basic blog, or even a lot of JavaScript, the <a
