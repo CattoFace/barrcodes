@@ -6,7 +6,7 @@ I'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm 
 It can't be that hard to write a basic blog without one, right?
 
 ## The Skeleton
-At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to write a single webpage.  
+At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to manually write a single webpage.  
 My HTML/CSS experience can be summed up by "I know that I need wrap text in `<div>` and use Flexbox" so with some help from Google(mostly for making divs and the logo behave with CSS...), and I've got the basic body that should suffice for all of my needs:
 ```html
   <body>
@@ -23,10 +23,9 @@ My HTML/CSS experience can be summed up by "I know that I need wrap text in `<di
     </footer>
   </body>
 ```
-The SVG paths were copied from Bootstrap's massive library of SVG icons.
 A little bit of browsing and picking fonts and we've got the page you're looking at now(unless I changed it since the time of writing)[^1]
 
-## Fetching Some Documents
+## Preparing Some Articles
 I'm sure most would agree with me that writing Markdown is much nicer than writing articles directly in HTML so what I need is some way to convert a Markdown file to an HTML file.  
 An earlier version of this site used a very useful JS library called [marked.js](https://marked.js.org/) which can parse and convert the Markdown on the client-side browser.  
 I later decided to save everyone else the little computation it costs and convert it on my side with another useful tool called [Pandoc](https://pandoc.org/), which can convert between a huge amount of text formats in the CLI.  
@@ -34,35 +33,43 @@ To convert all of the documents easily, I wrote a git pre-commit hook(surprising
 ```bash
 #!/bin/bash
 for md in documents/*.md; do
-  html=${md::-3}.html
+  base=$(basename $md)
+  html=${base::-3}.html
   if [ $md -nt $html ]; then
-    echo "Updating $html" && pandoc $md -o $html && git add $html
+    echo "Updating $base"
+    pandoc $md -o inner/$html
+    pandoc $md -o $html --template template.html
+    git add inner/$html $html
   else
     echo "$html Already Up To Date"
   fi
 done
 ```
-Now that I have the documents ready in their own folder, I need to put them inside the actual website, now comes the more interesting part:  
+This script converts the document twice:
+Once to a fragment that can be quickly embedded inside the page body, for relative navigation.  
+And a second time to a full html page that contains the article, for the initial website loading.  
+An earlier version only had the fragment, and loaded it into a blank body on the initial load, but that solution makes it impossible to statically serve metadata headers like the title.
+The full HTML pages are already enough to have a functional blog with 0 lines of JavaScript, but my goal is to make it as fast as possible to navigate, which is why I am going to need those article fragments.
 The plan is to listen to any links clicked, and if they are linking to another article within the website, simple fetch and replace the body of the page instead of loading an entirely new one.  
 A minimal solution to this is not hard at all:
 ```javascript
 content_div = document.getElementById("content")
 function replace_content(doc_name) { // replace the content with the requested document
-  fetch("documents/" + doc_name).then(response => response.text()).then(text=>content_div.innerHTML = text)
+  fetch("inner/" + doc_name).then(response => response.text()).then(text=>content_div.innerHTML = text)
 }
 var r = new RegExp('^(//|[a-z]+:)', 'i'); // check for relative link
 document.addEventListener('click', e => { // replace relative links with document replacements
   const origin = e.target.closest('a')
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
+  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) != '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
   if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
   replace_content(doc_name)
   history.pushState({}, "", doc_name)
 })
 ```
-the `indexOf` checks are meant for linking within the website to non-documents, like to any normal file that has a . before the extension, or the # used in reference links[^2].  
+the `indexOf, charAt` checks are meant for linking within the website to non-documents, like to any normal file that has a . before the extension, or the # used in reference links[^2].  
 Now every relative link on the website will fetch and replace like planned.  
 Of course, I need to load something when simply navigating into the website so I added a single line to the script to handle that:
 ```javascript
@@ -85,7 +92,7 @@ const cache = new Map()
 function replace_content(doc_name) { // replace the content with the requested document
   let doc = cache.get(doc_name)
   if (!doc) {
-    fetch("documents/" + doc_name).then(response => response.text()).then(text=>{
+    fetch("inner/" + doc_name).then(response => response.text()).then(text=>{
       cache.set(doc_name, text)
       content_div.innerHTML = text
     })
@@ -105,7 +112,7 @@ By listening to the `mouseover` event, I can start fetching a document before th
 function prefetch(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    fetch("documents/" + doc_name).then(response => response.text()).then(text=>cache.set(doc_name,text))
+    fetch("inner/" + doc_name).then(response => response.text()).then(text=>cache.set(doc_name,text))
   }
 }
 document.addEventListener('mouseover', e => { // start fetching document on hover
@@ -123,7 +130,7 @@ To solve this issue, I decided to simply store the fetch `Promise` in the cache 
 function get_document(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    doc = fetch("documents/" + doc_name).then(response => response.text())
+    doc = fetch("inner/" + doc_name).then(response => response.text())
     cache.set(doc_name, doc) // doc is a promise until resolved by replace_content
   }
   return doc

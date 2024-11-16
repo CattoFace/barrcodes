@@ -9,12 +9,11 @@ function toggle_theme() { // toggle between dark and light theme(default dark)
 function get_document(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    doc = fetch("documents/" + doc_name).then(response => response.text())
+    doc = fetch("inner/" + doc_name).then(response => response.text())
     cache.set(doc_name, doc) // doc is a promise until resolved by replace_content
   }
   return doc
 }
-get_document(window.location.pathname.slice(1) || "home") // start fetching the current document so it's ready when the DOM loads
 function replace_content(doc_name) { // replace the content with the requested document
   let doc = get_document(doc_name)
   if (doc instanceof Promise) { // if promise, convert to actual doc and save
@@ -31,7 +30,8 @@ document.addEventListener('click', e => { // replace relative links with documen
   const origin = e.target.closest('a')
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
+  console.log(doc_name)
+  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
   if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
   replace_content(doc_name)
@@ -50,5 +50,5 @@ window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")
   if (localStorage.getItem("light_mode") === "true") toggle_theme(); // load saved theme
-  replace_content(window.location.pathname.slice(1) || "home") // load current doc
+  // replace_content(window.location.pathname.slice(1) || "home") // load current doc
 })

@@ -1,0 +1,306 @@
+<h1 id="building-a-blog-in-2024-with-54-lines-of-javascript">Building a
+blog in 2024 with 54 lines of JavaScript</h1>
+<h4 style="text-align: right">
+2024-11-17
+</h4>
+<p>For a long time I wanted to write more code, but didn’t have a good
+reason to.<br />
+Now I have a solution: dump it all on a blog, maybe someone can learn
+something from it.<br />
+I’m not a big fan of front-end design, JavaScript, and bloat in general,
+so I’m pretty allergic to frameworks.<br />
+It can’t be that hard to write a basic blog without one, right?</p>
+<h2 id="the-skeleton">The Skeleton</h2>
+<p>At it’s core, a blog is just one page with different chunks of text
+in the middle of the header-footer sandwich, so ideally, I will only
+need to manually write a single webpage.<br />
+My HTML/CSS experience can be summed up by “I know that I need wrap text
+in <code>&lt;div&gt;</code> and use Flexbox” so with some help from
+Google(mostly for making divs and the logo behave with CSS…), and I’ve
+got the basic body that should suffice for all of my needs:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">header</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;header&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;logo banneritem&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>B<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>a<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>r<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>r<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>C<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>o<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>d<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>e<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="dt">&gt;</span>s<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;banneritem&quot;</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;home&quot;</span><span class="dt">&gt;</span>Home<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;banneritem&quot;</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;about&quot;</span><span class="dt">&gt;</span>About Me<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">header</span><span class="dt">&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;content&quot;</span><span class="dt">&gt;&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">footer</span><span class="dt">&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      [links and socials and stuff]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">footer</span><span class="dt">&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span></code></pre></div>
+<p>A little bit of browsing and picking fonts and we’ve got the page
+you’re looking at now(unless I changed it since the time of writing)<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<h2 id="preparing-some-articles">Preparing Some Articles</h2>
+<p>I’m sure most would agree with me that writing Markdown is much nicer
+than writing articles directly in HTML so what I need is some way to
+convert a Markdown file to an HTML file.<br />
+An earlier version of this site used a very useful JS library called <a
+href="https://marked.js.org/">marked.js</a> which can parse and convert
+the Markdown on the client-side browser.<br />
+I later decided to save everyone else the little computation it costs
+and convert it on my side with another useful tool called <a
+href="https://pandoc.org/">Pandoc</a>, which can convert between a huge
+amount of text formats in the CLI.<br />
+To convert all of the documents easily, I wrote a git pre-commit
+hook(surprisingly simple, simply write a bash script and save it as
+.git/hooks/pre-commit) to check if any of the Markdown files were
+modified later than their HTML counterparts, and convert it if it was. A
+very simple and effective system:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> md <span class="kw">in</span> documents/<span class="pp">*</span>.md<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$md)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">html</span><span class="op">=</span><span class="va">${base</span><span class="op">::</span>-<span class="dv">3</span><span class="va">}</span>.html</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="va">$md</span> <span class="ot">-nt</span> <span class="va">$html</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;Updating </span><span class="va">$base</span><span class="st">&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">pandoc</span> <span class="va">$md</span> <span class="at">-o</span> inner/<span class="va">$html</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">pandoc</span> <span class="va">$md</span> <span class="at">-o</span> <span class="va">$html</span> <span class="at">--template</span> template.html</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">git</span> add inner/<span class="va">$html</span> <span class="va">$html</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$html</span><span class="st"> Already Up To Date&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p>This script converts the document twice: Once to a fragment that can
+be quickly embedded inside the page body, for relative navigation.<br />
+And a second time to a full html page that contains the article, for the
+initial website loading.<br />
+An earlier version only had the fragment, and loaded it into a blank
+body on the initial load, but that solution makes it impossible to
+statically serve metadata headers like the title. The full HTML pages
+are already enough to have a functional blog with 0 lines of JavaScript,
+but my goal is to make it as fast as possible to navigate, which is why
+I am going to need those article fragments. The plan is to listen to any
+links clicked, and if they are linking to another article within the
+website, simple fetch and replace the body of the page instead of
+loading an entirely new one.<br />
+A minimal solution to this is not hard at all:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>content_div <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&quot;content&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replace_content</span>(doc_name) { <span class="co">// replace the content with the requested document</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fetch</span>(<span class="st">&quot;inner/&quot;</span> <span class="op">+</span> doc_name)<span class="op">.</span><span class="fu">then</span>(response <span class="kw">=&gt;</span> response<span class="op">.</span><span class="fu">text</span>())<span class="op">.</span><span class="fu">then</span>(text<span class="kw">=&gt;</span>content_div<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> text)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> r <span class="op">=</span> <span class="kw">new</span> <span class="bu">RegExp</span>(<span class="st">&#39;^(//|[a-z]+:)&#39;</span><span class="op">,</span> <span class="st">&#39;i&#39;</span>)<span class="op">;</span> <span class="co">// check for relative link</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">document</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;click&#39;</span><span class="op">,</span> e <span class="kw">=&gt;</span> { <span class="co">// replace relative links with document replacements</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> origin <span class="op">=</span> e<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="fu">closest</span>(<span class="st">&#39;a&#39;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>origin) <span class="cf">return</span><span class="op">;</span> <span class="co">// not a link</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc_name <span class="op">=</span> origin<span class="op">.</span><span class="fu">getAttribute</span>(<span class="st">&quot;href&quot;</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (r<span class="op">.</span><span class="fu">test</span>(doc_name) <span class="op">||</span> doc_name<span class="op">.</span><span class="fu">indexOf</span>(<span class="st">&#39;.&#39;</span>) <span class="op">&gt;</span> <span class="op">-</span><span class="dv">1</span> <span class="op">||</span> doc_name<span class="op">.</span><span class="fu">charAt</span>(<span class="dv">0</span>) <span class="op">!=</span> <span class="st">&#39;#&#39;</span>) <span class="cf">return</span><span class="op">;</span> <span class="co">// not link to a document</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  e<span class="op">.</span><span class="fu">preventDefault</span>() <span class="co">// relative links do not actually load a new webpage</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="op">||</span> <span class="st">&quot;home&quot;</span>) <span class="op">==</span> doc_name) <span class="cf">return</span><span class="op">;</span> <span class="co">// already on that page</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_content</span>(doc_name)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  history<span class="op">.</span><span class="fu">pushState</span>({}<span class="op">,</span> <span class="st">&quot;&quot;</span><span class="op">,</span> doc_name)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>the <code>indexOf, charAt</code> checks are meant for linking within
+the website to non-documents, like to any normal file that has a .
+before the extension, or the # used in reference links<a href="#fn2"
+class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>.<br />
+Now every relative link on the website will fetch and replace like
+planned.<br />
+Of course, I need to load something when simply navigating into the
+website so I added a single line to the script to handle that:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_content</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="op">||</span> <span class="st">&quot;home&quot;</span>) <span class="co">// load current doc</span></span></code></pre></div>
+<p>But of course, this is not the end, this solution has multiple things
+to improve upon:</p>
+<ul>
+<li>Going backwards in the browser within the website is now broken and
+doesn’t change the content.</li>
+<li>Going to an article we’ve already visited fetches it again, which
+has a noticeable delay on a throttled connection, even if it is already
+cached.</li>
+<li>It can go faster</li>
+</ul>
+<h2 id="improving-things">Improving Things:</h2>
+<p>After a quick google search, I learned that so solve the backwards
+bug, I simply need to listen to the <code>popstate</code> event that
+happens when a browser goes back, and set the right document
+content:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>onpopstate <span class="op">=</span> (_) <span class="kw">=&gt;</span> <span class="fu">replace_content</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="op">||</span> <span class="st">&quot;home&quot;</span>) <span class="co">// handle back button</span></span></code></pre></div>
+<p>Avoiding the fetch is not much more complicated, I added a Map that
+saves all the documents and reuses them if available instead of fetching
+again:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cache <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replace_content</span>(doc_name) { <span class="co">// replace the content with the requested document</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc <span class="op">=</span> cache<span class="op">.</span><span class="fu">get</span>(doc_name)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>doc) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="st">&quot;inner/&quot;</span> <span class="op">+</span> doc_name)<span class="op">.</span><span class="fu">then</span>(response <span class="kw">=&gt;</span> response<span class="op">.</span><span class="fu">text</span>())<span class="op">.</span><span class="fu">then</span>(text<span class="kw">=&gt;</span>{</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      cache<span class="op">.</span><span class="fu">set</span>(doc_name<span class="op">,</span> text)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      content_div<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> text</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    content_div<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> doc</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>And finally:</p>
+<h2 id="going-faster">Going Faster</h2>
+<p>This section takes the idea from the now famous <a
+href="https://www.reddit.com/r/programming/comments/1g75r84/how_is_this_website_so_fast_breaking_down_the/">McMASTER-CARR</a>
+website.<br />
+The easiest way to get to a new article faster is to simply start
+loading it earlier, usually we start loading a web page once a user
+clicks a link, but we can do better.<br />
+Before a user clicks a link, they will almost certainly hover over
+it(unless they tabbed into it with their keyboard), and that gives us a
+heads-up that the user <em>might</em> navigate tho that page, and that’s
+what this section exploits.<br />
+By listening to the <code>mouseover</code> event, I can start fetching a
+document before the user clicks the link:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">prefetch</span>(doc_name) { <span class="co">// download the requested document if it is not already in cache</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc <span class="op">=</span> cache<span class="op">.</span><span class="fu">get</span>(doc_name)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>doc) {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="st">&quot;inner/&quot;</span> <span class="op">+</span> doc_name)<span class="op">.</span><span class="fu">then</span>(response <span class="kw">=&gt;</span> response<span class="op">.</span><span class="fu">text</span>())<span class="op">.</span><span class="fu">then</span>(text<span class="kw">=&gt;</span>cache<span class="op">.</span><span class="fu">set</span>(doc_name<span class="op">,</span>text))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">document</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;mouseover&#39;</span><span class="op">,</span> e <span class="kw">=&gt;</span> { <span class="co">// start fetching document on hover</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> origin <span class="op">=</span> e<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="fu">closest</span>(<span class="st">&#39;a&#39;</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>origin) <span class="cf">return</span><span class="op">;</span> <span class="co">// not a link</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc_name <span class="op">=</span> origin<span class="op">.</span><span class="fu">getAttribute</span>(<span class="st">&quot;href&quot;</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (r<span class="op">.</span><span class="fu">test</span>(doc_name) <span class="op">||</span> doc_name<span class="op">.</span><span class="fu">indexOf</span>(<span class="st">&#39;.&#39;</span>) <span class="op">&gt;</span> <span class="op">-</span><span class="dv">1</span> <span class="op">||</span> doc_name<span class="op">.</span><span class="fu">indexOf</span>(<span class="st">&#39;#&#39;</span>) <span class="op">&gt;</span> <span class="op">-</span><span class="dv">1</span>) <span class="cf">return</span><span class="op">;</span> <span class="co">// not link to a document</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="op">||</span> <span class="st">&quot;home&quot;</span>) <span class="op">==</span> doc_name) <span class="cf">return</span><span class="op">;</span> <span class="co">// already on that page</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prefetch</span>(doc_name)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>This solution works great when the user takes a moment to decide if
+they want to navigate to the new page, but if they click the link
+immediately, there’s a good chance the fetch will not finish and
+<code>replace_content</code> will start a second fetch, which will both
+cause him to download the document twice(think of all those precious
+bytes!) and more importantly, throw away the small time advantage we
+gained by fetching early.<br />
+To solve this issue, I decided to simply store the fetch
+<code>Promise</code> in the cache when the user hovers over the link,
+and let <code>replace_content</code> check if it’s a
+<code>Promise</code> or an actual document and behave accordingly:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">get_document</span>(doc_name) { <span class="co">// download the requested document if it is not already in cache</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc <span class="op">=</span> cache<span class="op">.</span><span class="fu">get</span>(doc_name)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>doc) {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    doc <span class="op">=</span> <span class="fu">fetch</span>(<span class="st">&quot;inner/&quot;</span> <span class="op">+</span> doc_name)<span class="op">.</span><span class="fu">then</span>(response <span class="kw">=&gt;</span> response<span class="op">.</span><span class="fu">text</span>())</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    cache<span class="op">.</span><span class="fu">set</span>(doc_name<span class="op">,</span> doc) <span class="co">// doc is a promise until resolved by replace_content</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> doc</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replace_content</span>(doc_name) { <span class="co">// replace the content with the requested document</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> doc <span class="op">=</span> <span class="fu">get_document</span>(doc_name)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (doc <span class="kw">instanceof</span> <span class="bu">Promise</span>) { <span class="co">// if promise, convert to actual doc and save</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    doc<span class="op">.</span><span class="fu">then</span>(resolved <span class="kw">=&gt;</span> {</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      cache<span class="op">.</span><span class="fu">set</span>(doc_name<span class="op">,</span> resolved)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      content_div<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> resolved</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    content_div<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> doc</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><code>prefetch</code> was renamed to <code>get_document</code> since
+it now behaves sort of like a custom fetch to be used by the rest of the
+script.</p>
+<h2 id="final-touches">Final Touches</h2>
+<p>The website pretty much works as it is now but there are a few things
+we can improve upon:</p>
+<h3 id="dark-theme">Dark Theme</h3>
+<p>Everyone likes a dark theme option for a website(ideally by default),
+and it’s not hard to implement at all, so here I go.<br />
+All that is needed is a button that toggles a boolean, and a few CSS
+properties:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">header</span><span class="dt">&gt;</span>...<span class="dt">&lt;</span><span class="kw">button</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;toggle_theme&quot;</span><span class="ot"> onclick</span><span class="op">=</span><span class="st">&quot;toggle_theme()&quot;</span><span class="dt">&gt;</span>Dark<span class="dt">&lt;</span><span class="kw">br</span><span class="dt">/&gt;</span>Theme<span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;&lt;/</span><span class="kw">header</span><span class="dt">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">toggle_theme</span>() { <span class="co">// toggle between dark and light theme(default dark)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> light <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">toggle</span>(<span class="st">&quot;light&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  theme_button<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> light <span class="op">?</span> <span class="st">&quot;Light&lt;br/&gt;Theme&quot;</span> <span class="op">:</span> <span class="st">&quot;Dark&lt;br/&gt;Theme&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  localStorage<span class="op">.</span><span class="fu">setItem</span>(<span class="st">&#39;light_mode&#39;</span><span class="op">,</span> light)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>theme_button <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&quot;toggle_theme&quot;</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (localStorage<span class="op">.</span><span class="fu">getItem</span>(<span class="st">&quot;light_mode&quot;</span>) <span class="op">===</span> <span class="st">&quot;true&quot;</span>) <span class="fu">toggle_theme</span>()<span class="op">;</span> <span class="co">// load saved theme</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.light</span>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">--main-bg</span><span class="ch">:</span> <span class="cn">#EEEEEE</span><span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">--main-text</span><span class="ch">:</span> <span class="cn">#111111</span><span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">--link-color</span><span class="ch">:</span> <span class="cn">darkblue</span><span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>And it’s even saved across visits!</p>
+<h3 id="reducing-the-latency-a-little-more">Reducing The Latency A
+Little More</h3>
+<ul>
+<li><p>Looking at the browser’s network tab, there was a noticeable
+latency fetching the CSS for the fonts from <a
+href="https://fonts.google.com/">Google Fonts</a>, but not so much
+fetching the fonts themselves, so I simply copied the content of the CSS
+into my own CSS file and that solved it and improved the
+latency.</p></li>
+<li><p>Initially, I put the <code>&lt;script&gt;</code> tag at the end
+of the body of the HTML file, which causes it to be parsed and executed
+last, this was needed because it is not possible to interact with the
+DOM and insert a document into the body before the DOM actually loads.
+The current solution puts the script in the <code>&lt;head&gt;</code> of
+the HTML, and uses a <code>DOMContentLoaded</code> event to do only the
+things that require the DOM happen after it’s loaded:</p></li>
+</ul>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&quot;DOMContentLoaded&quot;</span><span class="op">,</span> _ <span class="kw">=&gt;</span> {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  content_div <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&quot;content&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  theme_button <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&quot;toggle_theme&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (localStorage<span class="op">.</span><span class="fu">getItem</span>(<span class="st">&quot;light_mode&quot;</span>) <span class="op">===</span> <span class="st">&quot;true&quot;</span>) <span class="fu">toggle_theme</span>()<span class="op">;</span> <span class="co">// load saved theme</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_content</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>) <span class="op">||</span> <span class="st">&quot;home&quot;</span>) <span class="co">// load current doc</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>I was not actually able to measure a statistically significant
+difference from this change, but I kept it anyway, someone else can
+probably explain what is the best practice for this.</p>
+<h2 id="deployment">Deployment</h2>
+<p>Finally, I need to actually host this website somewhere, I decided to
+go with <a href="https://pages.cloudflare.com/">Cloudflare Pages</a>, I
+already use them for my other domain(just for DNS) and I have no
+complaints.<br />
+There is not much to talk about that isn’t in their getting started
+documentation, I connected the GitHub repository and now every push to
+the preview or production branches and Cloudflare automatically
+redeploys the website(which only includes cloning it and distributing it
+over their network, since this is a static website).<br />
+One noteworthy thing is that Cloudflare has 2 useful default routing
+rules- index.html and 404.html will be used as fallback for missing
+routes, in my case:<br />
+Every webpage(which are all directly from the root, i.e /blog-building)
+will get the same /index.html.<br />
+And every invalid document(from the route /documents/*) will get the
+same /documents/404.html<br />
+The only difference between using index.html and 404.html is that they
+return 200 and 404 codes respectively.</p>
+<h2 id="summary">Summary</h2>
+<p>As expected, I don’t actually need any framework or even dependencies
+to build a basic blog, or even a lot of JavaScript, the <a
+href="script.js">script.js</a> file is exactly 54 lines long, without
+any unreadable minification.<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a><br />
+Sure, it could be nicer, it could have a dynamic home page that doesn’t
+need to be updated when a new article is publisher, it could have a
+comments system so other people can more easily send feedback(at the
+time of writing, I guess you can email me).<br />
+Maybe it <em>will</em> be nicer in the future, but for now, this is all
+I need.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I lied a little, font picking and the footer design
+happened after implementing the document system but I’d rather keep all
+the design writing together.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>This was actually added as I was testing this post and
+learning that the <code>script.js</code> link and the reference links
+are broken.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>The name of this article changed a couple times to
+reflect small late changes, I hoped I could keep it at a nice 50, but it
+is what it is.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
