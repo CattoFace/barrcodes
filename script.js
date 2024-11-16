@@ -7,7 +7,6 @@ function toggle_theme() { // toggle between dark and light theme(default dark)
   localStorage.setItem('light_mode', light)
 }
 function get_document(doc_name) { // download the requested document if it is not already in cache
-  doc_name = doc_name || "home"
   let doc = cache.get(doc_name)
   if (!doc) {
     doc = fetch("documents/" + doc_name).then(response => response.text())
@@ -15,9 +14,8 @@ function get_document(doc_name) { // download the requested document if it is no
   }
   return doc
 }
-get_document(window.location.pathname.slice(1)) // start fetching the current document so it's ready when the DOM loads
+get_document(window.location.pathname.slice(1) || "home") // start fetching the current document so it's ready when the DOM loads
 function replace_content(doc_name) { // replace the content with the requested document
-  doc_name = doc_name || "home"
   let doc = get_document(doc_name)
   if (doc instanceof Promise) { // if promise, convert to actual doc and save
     doc.then(resolved => {
@@ -33,7 +31,7 @@ document.addEventListener('click', e => { // replace relative links with documen
   const origin = e.target.closest('a')
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name)) return; // not a relative link
+  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
   if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
   replace_content(doc_name)
@@ -43,14 +41,14 @@ document.addEventListener('mouseover', e => { // start fetching document on hove
   const origin = e.target.closest('a')
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name)) return; // not a relative link
+  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
   if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
   get_document(doc_name)
 })
-onpopstate = (_) => replace_content(window.location.pathname.slice(1)) // handle back button
+onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "home") // handle back button
 window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")
   if (localStorage.getItem("light_mode") === "true") toggle_theme(); // load saved theme
-  replace_content(window.location.pathname.slice(1)) // load current doc
+  replace_content(window.location.pathname.slice(1) || "home") // load current doc
 })
