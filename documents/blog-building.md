@@ -170,7 +170,7 @@ And it's even saved across visits!
 
 ### Reducing The Latency A Little More
 
-- There was a noticeable latency fetching the CSS for the fonts from [Google Fonts](https://fonts.google.com/), but not so much fetching the fonts themselves, so I simply copied the content of the CSS into my own CSS file and that solved it and improved the latency.
+- Looking at the browser's network tab, there was a noticeable latency fetching the CSS for the fonts from [Google Fonts](https://fonts.google.com/), but not so much fetching the fonts themselves, so I simply copied the content of the CSS into my own CSS file and that solved it and improved the latency.
 
 - Initially, I put the `<script>` tag at the end of the body of the HTML file, which causes it to be parsed and executed last, this was needed because it is not possible to interact with the DOM and insert a document into the body before the DOM actually loads.
 The current solution puts the script in the `<head>` of the HTML, and uses a `DOMContentLoaded` event to do only the things that require the DOM happen after it's loaded:

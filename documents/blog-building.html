@@ -218,10 +218,11 @@ class="sourceCode css"><code class="sourceCode css"><span id="cb11-1"><a href="#
 <h3 id="reducing-the-latency-a-little-more">Reducing The Latency A
 Little More</h3>
 <ul>
-<li><p>There was a noticeable latency fetching the CSS for the fonts
-from <a href="https://fonts.google.com/">Google Fonts</a>, but not so
-much fetching the fonts themselves, so I simply copied the content of
-the CSS into my own CSS file and that solved it and improved the
+<li><p>Looking at the browser’s network tab, there was a noticeable
+latency fetching the CSS for the fonts from <a
+href="https://fonts.google.com/">Google Fonts</a>, but not so much
+fetching the fonts themselves, so I simply copied the content of the CSS
+into my own CSS file and that solved it and improved the
 latency.</p></li>
 <li><p>Initially, I put the <code>&lt;script&gt;</code> tag at the end
 of the body of the HTML file, which causes it to be parsed and executed
