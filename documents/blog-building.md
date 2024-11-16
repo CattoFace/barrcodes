@@ -187,9 +187,8 @@ I was not actually able to measure a statistically significant difference from t
 
 ## Deployment
 Finally, I need to actually host this website somewhere, I decided to go with [Cloudflare Pages](https://pages.cloudflare.com/), I already use them for my other domain(just for DNS) and I have no complaints.  
-There is not much to talk about that isn't in their getting started documentation, I connected the GitHub repository and now every push to the preview or production branches and Cloudflare automatically redeploys the website(which only includes cloning it and distributing it over their network, since this is a static website).
-One noteworthy thing is that Cloudflare has 2 useful default routing rules:  
-index.html and 404.html will be used as fallback for missing routes, in my case:  
+There is not much to talk about that isn't in their getting started documentation, I connected the GitHub repository and now every push to the preview or production branches and Cloudflare automatically redeploys the website(which only includes cloning it and distributing it over their network, since this is a static website).  
+One noteworthy thing is that Cloudflare has 2 useful default routing rules- index.html and 404.html will be used as fallback for missing routes, in my case:  
 Every webpage(which are all directly from the root, i.e /blog-building) will get the same /index.html.
 And every invalid document(from the route /documents/*) will get the same /documents/404.html
 The only difference between using index.html and 404.html is that they return 200 and 404 codes respectively.
