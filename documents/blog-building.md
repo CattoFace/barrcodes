@@ -35,9 +35,9 @@ To convert all of the documents easily, I wrote a git pre-commit hook(surprising
 for md in documents/*.md; do
   html=${md%.*}.html
   if [ $md -nt $html ]; then
-    echo "Updating $md" && pandoc $md -o $html && git add $html
+    echo "Updating $html" && pandoc $md -o $html && git add $html
   else
-    echo "$md Already Up To Date"
+    echo "$html Already Up To Date"
   fi
 done
 ```
