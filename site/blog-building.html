@@ -246,8 +246,7 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p><code>prefetch</code> was renamed to <code>get_document</code> since
-it now behaves sort of like a custom fetch to be used by the rest of the
-script.</p>
+it now behaves sort of like a custom fetch.</p>
 <h2 id="final-touches">Final Touches</h2>
 <p>The website pretty much works as it is now but there are a few things
 that can be improved:</p>
@@ -310,16 +309,27 @@ documentation, I connected the GitHub repository and now every push to
 the preview or production branches and Cloudflare automatically
 redeploys the website(which only includes cloning it and distributing it
 over their network, since this is a static website).</p>
+<h2 id="unexplained-behaviour">Unexplained Behaviour</h2>
+<p>A surprising behavior I found while finalizing the website design, is
+that if I have an active Zoom call in another tab, having my
+<code>onhover</code> listener adds a significant delay before the
+following click can load the page.<br />
+Disabling the <code>onhover</code> listener or clicking a link without
+hovering first(i.e using the keyboard) still fetches and displays the
+document quickly.<br />
+This behaviour goes back to normal the moment the call ends.– I can find
+absolutely no explanation for this behaviour.</p>
 <h2 id="summary">Summary</h2>
 <p>As expected, I don’t actually need any frameworks to build a basic
-blog, or even a lot of JavaScript, the <a href="script.js">script.js</a>
-file is exactly 56 lines long, without any unreadable minification.<a
-href="#fn3" class="footnote-ref" id="fnref3"
-role="doc-noteref"><sup>3</sup></a><br />
+and performant blog, or even a lot of JavaScript, the <a
+href="script.js">script.js</a> file is exactly 56 lines long, without
+any unreadable minification.<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a><br />
 Sure, it could be nicer, it could have a dynamic home page that doesn’t
 need to be updated when a new article is published, it could have a
-comments system so other people can more easily send feedback(at the
-time of writing, I guess you can email me).<br />
+comments system so other people can more easily send feedback(<a
+href="https://utteranc.es/">utterances</a> looks like an interesting
+solution, at the time of writing, I guess you can email me).<br />
 Maybe it <em>will</em> be nicer in the future, but for now, this is all
 I need.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"

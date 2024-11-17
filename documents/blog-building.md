@@ -164,7 +164,7 @@ function replace_content(doc_name) { // replace the content with the requested d
   }
 }
 ```
-`prefetch` was renamed to `get_document` since it now behaves sort of like a custom fetch to be used by the rest of the script.
+`prefetch` was renamed to `get_document` since it now behaves sort of like a custom fetch.
 
 ## Final Touches
 The website pretty much works as it is now but there are a few things that can be improved:
@@ -213,9 +213,15 @@ I was not actually able to measure a statistically significant difference from t
 Finally, I need to actually host this website somewhere, I decided to go with [Cloudflare Pages](https://pages.cloudflare.com/), I already use them for my other domain(just for DNS) and I have no complaints.  
 There is not much to talk about that isn't in their getting started documentation, I connected the GitHub repository and now every push to the preview or production branches and Cloudflare automatically redeploys the website(which only includes cloning it and distributing it over their network, since this is a static website).  
 
+## Unexplained Behaviour
+A surprising behavior I found while finalizing the website design, is that if I have an active Zoom call in another tab, having my `onhover` listener adds a significant delay before the following click can load the page.  
+Disabling the `onhover` listener or clicking a link without hovering first(i.e using the keyboard) still fetches and displays the document quickly.  
+This behaviour goes back to normal the moment the call ends.--
+I can find absolutely no explanation for this behaviour.
+
 ## Summary
-As expected, I don't actually need any frameworks to build a basic blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
-Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback(at the time of writing, I guess you can email me).  
+As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
+Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([utterances](https://utteranc.es/) looks like an interesting solution, at the time of writing, I guess you can email me).  
 Maybe it *will* be nicer in the future, but for now, this is all I need.
 
 [^1]:I lied a little, font picking and the footer design happened after implementing the document system but I'd rather keep all the design writing together.
