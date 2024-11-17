@@ -9,7 +9,7 @@ function toggle_theme() { // toggle between dark and light theme(default dark)
 function get_document(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    doc = fetch("inner/" + doc_name).then(response => response.text())
+    doc = fetch("fragment/" + doc_name).then(response => response.text())
     cache.set(doc_name, doc) // doc is a promise until resolved by replace_content
   }
   return doc
@@ -36,7 +36,7 @@ document.addEventListener('click', e => { // replace relative links with documen
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
-  if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
+  if ((window.location.pathname.slice(1) || "index") == doc_name) return; // already on that page
   replace_content(doc_name)
   history.pushState({}, "", doc_name)
 })
@@ -45,10 +45,10 @@ document.addEventListener('mouseover', e => { // start fetching document on hove
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
-  if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
+  if ((window.location.pathname.slice(1) || "index") == doc_name) return; // already on that page
   get_document(doc_name)
 })
-onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "home") // handle back button
+onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "index") // handle back button
 window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")

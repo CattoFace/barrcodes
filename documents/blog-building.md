@@ -1,8 +1,8 @@
 ---
-title: Building a blog in 2024 with 54 lines of JavaScripts
+title: Building a blog in 2024 with 56 lines of JavaScripts
 author: Barr
 date: 2024-11-17
-description: My “Hello World” post about how I made this blog with no frameworks and dependencies
+description: My “Hello World” post about how I made this blog with no frameworks and client-side dependencies.
 abstract: |
   For a long time I wanted to write more code, but didn't have a good reason to.  
   Now I have a solution: dump it all on a blog, maybe someone can learn something from it.  
@@ -31,7 +31,7 @@ A little bit of browsing and picking fonts and we've got the page you're looking
 
 ## Preparing Some Articles
 I'm sure most would agree with me that writing Markdown is much nicer than writing articles directly in HTML so what I need is some way to convert a Markdown file to an HTML file.  
-An earlier version of this site used a very useful JS library called [marked.js](https://marked.js.org/) which can parse and convert the Markdown on the client-side browser.  
+An earlier version of this site used a JS library called [marked.js](https://marked.js.org/) which can parse and convert the Markdown on the client-side browser.  
 I later decided to save everyone else the little computation it costs and convert it on my side with another useful tool called [Pandoc](https://pandoc.org/), which can convert between a huge amount of text formats in the CLI.  
 To convert all of the documents easily, I wrote a git pre-commit hook(surprisingly simple, simply write a bash script and save it as .git/hooks/pre-commit) to check if any of the Markdown files were modified later than their HTML counterparts, and convert it if it was. A very simple and effective system:  
 ```bash
@@ -39,27 +39,35 @@ To convert all of the documents easily, I wrote a git pre-commit hook(surprising
 for md in documents/*.md; do
   base=$(basename $md)
   html=${base::-3}.html
-  if [ $md -nt $html ]; then
+  full=site/$html
+  fragment=site/fragment/$html
+  if [ $md -nt $full ] || [ $md -nt $fragment ]; then
     echo "Updating $base"
-    pandoc $md -o inner/$html
-    pandoc $md -o $html --template template.html
-    git add inner/$html $html
+    pandoc $md -o $full --template full_template.html
+    pandoc $md -o $fragment --template fragment_template.html
+    git add $full $fragment
   else
-    echo "$html Already Up To Date"
+    echo "$base Already Up To Date"
   fi
 done
 ```
 This script converts the document twice:
-Once to a fragment that can be quickly embedded inside the page body, for relative navigation.  
-And a second time to a full html page that contains the article, for the initial website loading.  
+Once to a full html page that contains the article, for the initial website loading.  
+The full template combines the skeleton I built earlier with the document.
+And a second time to a fragment that can be quickly embedded inside the page body, for relative navigation.  
+The fragment template simply combines the metadata section with the text.  
 An earlier version only had the fragment, and loaded it into a blank body on the initial load, but that solution makes it impossible to statically serve metadata headers like the title.
 The full HTML pages are already enough to have a functional blog with 0 lines of JavaScript, but my goal is to make it as fast as possible to navigate, which is why I am going to need those article fragments.
 The plan is to listen to any links clicked, and if they are linking to another article within the website, simple fetch and replace the body of the page instead of loading an entirely new one.  
-A minimal solution to this is not hard at all:
+A minimal solution to this is just a simple `click` event listener:
 ```javascript
 content_div = document.getElementById("content")
 function replace_content(doc_name) { // replace the content with the requested document
-  fetch("inner/" + doc_name).then(response => response.text()).then(text=>content_div.innerHTML = text)
+  fetch("inner/" + doc_name).then(response => response.text()).then(text=>{
+    content_div.innerHTML = text
+    title = document.getElementById("title")
+    document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
+  })
 }
 var r = new RegExp('^(//|[a-z]+:)', 'i'); // check for relative link
 document.addEventListener('click', e => { // replace relative links with document replacements
@@ -68,17 +76,13 @@ document.addEventListener('click', e => { // replace relative links with documen
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) != '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
-  if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
+  if ((window.location.pathname.slice(1) || "index") == doc_name) return; // already on that page
   replace_content(doc_name)
   history.pushState({}, "", doc_name)
 })
 ```
 the `indexOf, charAt` checks are meant for linking within the website to non-documents, like to any normal file that has a . before the extension, or the # used in reference links[^2].  
 Now every relative link on the website will fetch and replace like planned.  
-Of course, I need to load something when simply navigating into the website so I added a single line to the script to handle that:
-```javascript
-  replace_content(window.location.pathname.slice(1) || "home") // load current doc
-```
 But of course, this is not the end, this solution has multiple things to improve upon:
 
 - Going backwards in the browser within the website is now broken and doesn't change the content.
@@ -88,7 +92,7 @@ But of course, this is not the end, this solution has multiple things to improve
 ## Improving Things:
 After a quick google search, I learned that so solve the backwards bug, I simply need to listen to the `popstate` event that happens when a browser goes back, and set the right document content:
 ```javascript
-onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "home") // handle back button
+onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "index") // handle back button
 ```
 Avoiding the fetch is not much more complicated, I added a Map that saves all the documents and reuses them if available instead of fetching again:
 ```javascript
@@ -96,12 +100,16 @@ const cache = new Map()
 function replace_content(doc_name) { // replace the content with the requested document
   let doc = cache.get(doc_name)
   if (!doc) {
-    fetch("inner/" + doc_name).then(response => response.text()).then(text=>{
+    fetch("fragment/" + doc_name).then(response => response.text()).then(text=>{
       cache.set(doc_name, text)
       content_div.innerHTML = text
+      title = document.getElementById("title")
+      document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
     })
   } else {
     content_div.innerHTML = doc
+    title = document.getElementById("title")
+    document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
   }
 }
 ```
@@ -199,13 +207,9 @@ I was not actually able to measure a statistically significant difference from t
 ## Deployment
 Finally, I need to actually host this website somewhere, I decided to go with [Cloudflare Pages](https://pages.cloudflare.com/), I already use them for my other domain(just for DNS) and I have no complaints.  
 There is not much to talk about that isn't in their getting started documentation, I connected the GitHub repository and now every push to the preview or production branches and Cloudflare automatically redeploys the website(which only includes cloning it and distributing it over their network, since this is a static website).  
-One noteworthy thing is that Cloudflare has 2 useful default routing rules- index.html and 404.html will be used as fallback for missing routes, in my case:  
-Every webpage(which are all directly from the root, i.e /blog-building) will get the same /index.html.  
-And every invalid document(from the route /documents/*) will get the same /documents/404.html  
-The only difference between using index.html and 404.html is that they return 200 and 404 codes respectively.
 
 ## Summary
-As expected, I don't actually need any framework or even dependencies to build a basic blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 54 lines long, without any unreadable minification.[^3]  
+As expected, I don't actually need any framework or even dependencies to build a basic blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
 Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is publisher, it could have a comments system so other people can more easily send feedback(at the time of writing, I guess you can email me).  
 Maybe it *will* be nicer in the future, but for now, this is all I need.
 
