@@ -1,5 +1,5 @@
 <h1 id="title" class="title">Building a blog in 2024 with 56 lines of
-JavaScripts</h1>
+JavaScript</h1>
 <h4 style="text-align: right" class="date">2024-11-17</h4>
 <div class="abstract">
 <p>For a long time I wanted to write more code, but didn’t have a good
@@ -68,13 +68,15 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$base</span><span class="st"> Already Up To Date&quot;</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
-<p>This script converts the document twice: Once to a full html page
-that contains the article, for the initial website loading.<br />
-The full template combines the skeleton I built earlier with the
-document. And a second time to a fragment that can be quickly embedded
-inside the page body, for relative navigation.<br />
-The fragment template simply combines the metadata section with the
-text.<br />
+<p>This script converts the document twice:<br />
+Once to a full html page that contains the article, for the initial
+website loading.<br />
+The <a href="assets/full_template.html">full template</a> combines the
+skeleton I built earlier with the document. And a second time to a
+fragment that can be quickly embedded inside the page body, for relative
+navigation.<br />
+The <a href="assets/fragment_template.html">fragment template</a> simply
+combines the metadata section with the text.<br />
 An earlier version only had the fragment, and loaded it into a blank
 body on the initial load, but that solution makes it impossible to
 statically serve metadata headers like the title. The full HTML pages

@@ -1,5 +1,5 @@
 ---
-title: Building a blog in 2024 with 56 lines of JavaScripts
+title: Building a blog in 2024 with 56 lines of JavaScript
 author: Barr
 date: 2024-11-17
 description: My “Hello World” post about how I made this blog with no frameworks and client-side dependencies.
@@ -51,11 +51,11 @@ for md in documents/*.md; do
   fi
 done
 ```
-This script converts the document twice:
+This script converts the document twice:  
 Once to a full html page that contains the article, for the initial website loading.  
-The full template combines the skeleton I built earlier with the document.
+The [full template](assets/full_template.html) combines the skeleton I built earlier with the document.
 And a second time to a fragment that can be quickly embedded inside the page body, for relative navigation.  
-The fragment template simply combines the metadata section with the text.  
+The [fragment template](assets/fragment_template.html) simply combines the metadata section with the text.  
 An earlier version only had the fragment, and loaded it into a blank body on the initial load, but that solution makes it impossible to statically serve metadata headers like the title.
 The full HTML pages are already enough to have a functional blog with 0 lines of JavaScript, but my goal is to make it as fast as possible to navigate, which is why I am going to need those article fragments.
 The plan is to listen to any links clicked, and if they are linking to another article within the website, simple fetch and replace the body of the page instead of loading an entirely new one.  
