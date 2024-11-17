@@ -63,7 +63,8 @@ A minimal solution to this is just a simple `click` event listener:
 ```javascript
 content_div = document.getElementById("content")
 function replace_content(doc_name) { // replace the content with the requested document
-  fetch("inner/" + doc_name).then(response => response.text()).then(text=>{
+  if (doc_name == "/") doc_name = "";
+  fetch("fragment/" + doc_name).then(response => response.text()).then(text=>{
     content_div.innerHTML = text
     title = document.getElementById("title")
     document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
@@ -76,12 +77,12 @@ document.addEventListener('click', e => { // replace relative links with documen
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) != '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
-  if ((window.location.pathname.slice(1) || "index") == doc_name) return; // already on that page
+  if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
   replace_content(doc_name)
   history.pushState({}, "", doc_name)
 })
 ```
-the `indexOf, charAt` checks are meant for linking within the website to non-documents, like to any normal file that has a . before the extension, or the # used in reference links[^2].  
+the `indexOf, charAt` checks are meant for linking within the website to non-documents, like to any normal file that has a dot before the extension, or the # used in reference links[^2].  
 Now every relative link on the website will fetch and replace like planned.  
 But of course, this is not the end, this solution has multiple things to improve upon:
 
@@ -92,7 +93,7 @@ But of course, this is not the end, this solution has multiple things to improve
 ## Improving Things:
 After a quick google search, I learned that so solve the backwards bug, I simply need to listen to the `popstate` event that happens when a browser goes back, and set the right document content:
 ```javascript
-onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "index") // handle back button
+onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "/") // handle back button
 ```
 Avoiding the fetch is not much more complicated, I added a Map that saves all the documents and reuses them if available instead of fetching again:
 ```javascript
@@ -124,7 +125,7 @@ By listening to the `mouseover` event, I can start fetching a document before th
 function prefetch(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    fetch("inner/" + doc_name).then(response => response.text()).then(text=>cache.set(doc_name,text))
+    fetch("fragment/" + doc_name).then(response => response.text()).then(text=>cache.set(doc_name,text))
   }
 }
 document.addEventListener('mouseover', e => { // start fetching document on hover
@@ -132,7 +133,7 @@ document.addEventListener('mouseover', e => { // start fetching document on hove
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
-  if ((window.location.pathname.slice(1) || "home") == doc_name) return; // already on that page
+  if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
   prefetch(doc_name)
 })
 ```
@@ -142,7 +143,7 @@ To solve this issue, I decided to simply store the fetch `Promise` in the cache 
 function get_document(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    doc = fetch("inner/" + doc_name).then(response => response.text())
+    doc = fetch("fragment/" + doc_name).then(response => response.text())
     cache.set(doc_name, doc) // doc is a promise until resolved by replace_content
   }
   return doc
@@ -153,16 +154,20 @@ function replace_content(doc_name) { // replace the content with the requested d
     doc.then(resolved => {
       cache.set(doc_name, resolved)
       content_div.innerHTML = resolved
+      title = document.getElementById("title")
+      document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
     })
   } else {
     content_div.innerHTML = doc
+    title = document.getElementById("title")
+    document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
   }
 }
 ```
 `prefetch` was renamed to `get_document` since it now behaves sort of like a custom fetch to be used by the rest of the script.
 
 ## Final Touches
-The website pretty much works as it is now but there are a few things we can improve upon:
+The website pretty much works as it is now but there are a few things that can be improved:
 
 ### Dark Theme
 Everyone likes a dark theme option for a website(ideally by default), and it's not hard to implement at all, so here I go.  
@@ -199,7 +204,7 @@ window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")
   if (localStorage.getItem("light_mode") === "true") toggle_theme(); // load saved theme
-  replace_content(window.location.pathname.slice(1) || "home") // load current doc
+  replace_content(window.location.pathname.slice(1) || "/") // load current doc
 })
 ```
 I was not actually able to measure a statistically significant difference from this change, but I kept it anyway, someone else can probably explain what is the best practice for this.
@@ -209,8 +214,8 @@ Finally, I need to actually host this website somewhere, I decided to go with [C
 There is not much to talk about that isn't in their getting started documentation, I connected the GitHub repository and now every push to the preview or production branches and Cloudflare automatically redeploys the website(which only includes cloning it and distributing it over their network, since this is a static website).  
 
 ## Summary
-As expected, I don't actually need any framework or even dependencies to build a basic blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
-Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is publisher, it could have a comments system so other people can more easily send feedback(at the time of writing, I guess you can email me).  
+As expected, I don't actually need any frameworks to build a basic blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
+Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback(at the time of writing, I guess you can email me).  
 Maybe it *will* be nicer in the future, but for now, this is all I need.
 
 [^1]:I lied a little, font picking and the footer design happened after implementing the document system but I'd rather keep all the design writing together.

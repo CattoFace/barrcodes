@@ -1,6 +1,5 @@
 const cache = new Map()
-let content_div = undefined
-let theme_button = undefined
+let theme_button, content_div // filled when DOM loads
 function toggle_theme() { // toggle between dark and light theme(default dark)
   const light = document.body.classList.toggle("light")
   theme_button.innerHTML = light ? "Light<br/>Theme" : "Dark<br/>Theme"
@@ -36,7 +35,8 @@ document.addEventListener('click', e => { // replace relative links with documen
   let doc_name = origin.getAttribute("href")
   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
-  if ((window.location.pathname.slice(1) || "index") == doc_name) return; // already on that page
+  console.log(doc_name)
+  if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
   replace_content(doc_name)
   history.pushState({}, "", doc_name)
 })
@@ -44,11 +44,11 @@ document.addEventListener('mouseover', e => { // start fetching document on hove
   const origin = e.target.closest('a')
   if (!origin) return; // not a link
   let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.indexOf('#') > -1) return; // not link to a document
-  if ((window.location.pathname.slice(1) || "index") == doc_name) return; // already on that page
+  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
+  if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
   get_document(doc_name)
 })
-onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "index") // handle back button
+onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "/") // handle back button
 window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")
