@@ -12,7 +12,8 @@
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Barr" />
-  <meta name="dcterms.date" content="2024-11-17" />
+  <meta name="dcterms.date" content="2024-11-20" />
+  <meta name="keywords" content="Blog, HTML, CSS, JavaScript" />
   <meta name="description" content="My “Hello World” post about how I made this blog with no frameworks and client-side dependencies." />
 <title>BarrCodes - Building a blog in 2024 with 56 lines of JavaScript</title>
 </head>
@@ -28,7 +29,7 @@
 <div id="content">
 <h1 id="title" class="title">Building a blog in 2024 with 56 lines of
 JavaScript</h1>
-<div style="text-align: right" class="date"><em>2024-11-17</em></div>
+<div style="text-align: right" class="date"><em>2024-11-20</em></div>
 <div class="abstract">
 <p>For a long time I wanted to write more code, but didn’t have a good
 reason to.<br />
@@ -110,10 +111,14 @@ body on the initial load, but that solution makes it impossible to
 statically serve metadata headers like the title. The full HTML pages
 are already enough to have a functional blog with 0 lines of JavaScript,
 but my goal is to make it as fast as possible to navigate, which is why
-I am going to need those article fragments. The plan is to listen to any
-links clicked, and if they are linking to another article within the
-website, simple fetch and replace the body of the page instead of
-loading an entirely new one.<br />
+I am going to need those article fragments. And another useful trick
+this script enables: I can run <code>watch .git/hooks/pre-commit</code>
+to have the HTML regenerate when saved and served instantly on my local
+web server(Take that “Fast Refresh”!).</p>
+<h2 id="fetching-some-articles">Fetching Some Articles</h2>
+<p>The plan is to listen to any links clicked, and if they are linking
+to another article within the website, simple fetch and replace the body
+of the page instead of loading an entirely new one.<br />
 A minimal solution to this is just a simple <code>click</code> event
 listener:</p>
 <div class="sourceCode" id="cb3"><pre
@@ -188,7 +193,7 @@ href="https://www.reddit.com/r/programming/comments/1g75r84/how_is_this_website_
 website.<br />
 The easiest way to get to a new article faster is to simply start
 loading it earlier, usually we start loading a web page once a user
-clicks a link, but we can do better.<br />
+clicks a link, but I can do better.<br />
 Before a user clicks a link, they will almost certainly hover over
 it(unless they tabbed into it with their keyboard), and that gives us a
 heads-up that the user <em>might</em> navigate tho that page, and that’s
@@ -215,7 +220,7 @@ they want to navigate to the new page, but if they click the link
 immediately, there’s a good chance the fetch will not finish and
 <code>replace_content</code> will start a second fetch, which will both
 cause him to download the document twice(think of all those precious
-bytes!) and more importantly, throw away the small time advantage we
+bytes!) and more importantly, throw away the small time advantage I
 gained by fetching early.<br />
 To solve this issue, I decided to simply store the fetch
 <code>Promise</code> in the cache when the user hovers over the link,
@@ -329,7 +334,7 @@ Sure, it could be nicer, it could have a dynamic home page that doesn’t
 need to be updated when a new article is published, it could have a
 comments system so other people can more easily send feedback(<a
 href="https://utteranc.es/">utterances</a> looks like an interesting
-solution, at the time of writing, I guess you can email me).<br />
+solution, might add it to all articles later).<br />
 Maybe it <em>will</em> be nicer in the future, but for now, this is all
 I need.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"

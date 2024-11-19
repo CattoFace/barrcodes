@@ -1,7 +1,8 @@
 ---
 title: Building a blog in 2024 with 56 lines of JavaScript
 author: Barr
-date: 2024-11-17
+date: 2024-11-20
+keywords: [Blog, HTML, CSS, JavaScript]
 description: My “Hello World” post about how I made this blog with no frameworks and client-side dependencies.
 abstract: |
   For a long time I wanted to write more code, but didn't have a good reason to.  
@@ -58,6 +59,9 @@ And a second time to a fragment that can be quickly embedded inside the page bod
 The [fragment template](assets/fragment_template.html) simply combines the metadata section with the text.  
 An earlier version only had the fragment, and loaded it into a blank body on the initial load, but that solution makes it impossible to statically serve metadata headers like the title.
 The full HTML pages are already enough to have a functional blog with 0 lines of JavaScript, but my goal is to make it as fast as possible to navigate, which is why I am going to need those article fragments.
+And another useful trick this script enables: I can run `watch .git/hooks/pre-commit` to have the HTML regenerate when saved and served instantly on my local web server(Take that "Fast Refresh"!).
+
+## Fetching Some Articles
 The plan is to listen to any links clicked, and if they are linking to another article within the website, simple fetch and replace the body of the page instead of loading an entirely new one.  
 A minimal solution to this is just a simple `click` event listener:
 ```javascript
@@ -118,7 +122,7 @@ And finally:
 
 ## Going Faster
 This section takes the idea from the now famous [McMASTER-CARR](https://www.reddit.com/r/programming/comments/1g75r84/how_is_this_website_so_fast_breaking_down_the/) website.  
-The easiest way to get to a new article faster is to simply start loading it earlier, usually we start loading a web page once a user clicks a link, but we can do better.  
+The easiest way to get to a new article faster is to simply start loading it earlier, usually we start loading a web page once a user clicks a link, but I can do better.  
 Before a user clicks a link, they will almost certainly hover over it(unless they tabbed into it with their keyboard), and that gives us a heads-up that the user *might* navigate tho that page, and that's what this section exploits.  
 By listening to the `mouseover` event, I can start fetching a document before the user clicks the link:
 ```javascript
@@ -137,7 +141,7 @@ document.addEventListener('mouseover', e => { // start fetching document on hove
   prefetch(doc_name)
 })
 ```
-This solution works great when the user takes a moment to decide if they want to navigate to the new page, but if they click the link immediately, there's a good chance the fetch will not finish and `replace_content` will start a second fetch, which will both cause him to download the document twice(think of all those precious bytes!) and more importantly, throw away the small time advantage we gained by fetching early.  
+This solution works great when the user takes a moment to decide if they want to navigate to the new page, but if they click the link immediately, there's a good chance the fetch will not finish and `replace_content` will start a second fetch, which will both cause him to download the document twice(think of all those precious bytes!) and more importantly, throw away the small time advantage I gained by fetching early.  
 To solve this issue, I decided to simply store the fetch `Promise` in the cache when the user hovers over the link, and let `replace_content` check if it's a `Promise` or an actual document and behave accordingly:
 ```javascript
 function get_document(doc_name) { // download the requested document if it is not already in cache
@@ -221,7 +225,7 @@ I can find absolutely no explanation for this behaviour.
 
 ## Summary
 As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
-Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([utterances](https://utteranc.es/) looks like an interesting solution, at the time of writing, I guess you can email me).  
+Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([utterances](https://utteranc.es/) looks like an interesting solution, might add it to all articles later).  
 Maybe it *will* be nicer in the future, but for now, this is all I need.
 
 [^1]:I lied a little, font picking and the footer design happened after implementing the document system but I'd rather keep all the design writing together.
