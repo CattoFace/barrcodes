@@ -513,9 +513,10 @@ Using a tool called `nvprof` that comes included with the CUDA compiler, I can s
                    35.03%  41.465ms  cudaDeviceSynchron
 ```
 At first, it might seem weird that such a basic function takes most of the time of the program. But in reality, it's not the function that takes all that time, it is the initialization of the CUDA runtime, no matter what CUDA call comes first, it will take a lot of time.  
-What is the real time that should be measured? The depends on what the goal of the measurement is, in my case, the goal is simply to get a smaller number, and I have no control over the initialization overhead, so I'm taking the kernel time.
+What is the real time that should be measured? The depends on what the goal of the measurement is, in my case, the goal is simply to get a smaller number, and I have no control over the initialization overhead, so I'm taking the kernel time.  
+Additionally, if I scaled the program to a bigger amount of battles, the overhead will remain the same size and disappear within the rest of the runtime.
 
-### Bigger GPU Means Lower Time
+## Bigger GPU Means Lower Time - Sub 10 Milliseconds
 One final benchmark, this time with the added comparison with a borrowed Desktop RTX 4080:
 
 | GPU                   | Average |

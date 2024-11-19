@@ -799,8 +799,12 @@ matter what CUDA call comes first, it will take a lot of time.<br />
 What is the real time that should be measured? The depends on what the
 goal of the measurement is, in my case, the goal is simply to get a
 smaller number, and I have no control over the initialization overhead,
-so I’m taking the kernel time.</p>
-<h3 id="bigger-gpu-means-lower-time">Bigger GPU Means Lower Time</h3>
+so I’m taking the kernel time.<br />
+Additionally, if I scaled the program to a bigger amount of battles, the
+overhead will remain the same size and disappear within the rest of the
+runtime.</p>
+<h2 id="bigger-gpu-means-lower-time---sub-10-milliseconds">Bigger GPU
+Means Lower Time - Sub 10 Milliseconds</h2>
 <p>One final benchmark, this time with the added comparison with a
 borrowed Desktop RTX 4080:</p>
 <table>
