@@ -3,6 +3,14 @@
 <p>{{ .Summary  }}</p>
 {{if .Params.github}}<a href="{{.Params.github}}">Link To The Code On GitHub</a>{{end}}
 {{.Content}}
+<div style="overflow:auto">
+{{ with .CurrentSection.Pages.Prev . }}
+  <a href="{{ .RelPermalink }}">Previous: {{.Title}}</a>
+{{ end }}
+{{ with .CurrentSection.Pages.Next . }}
+  <a style="float:right" href="{{ .RelPermalink }}">Next: {{.Title}}</a>
+{{ end }}
+</div>
 <script src="https://utteranc.es/client.js"
 repo="CattoFace/barrcodes"
 issue-term="pathname"
