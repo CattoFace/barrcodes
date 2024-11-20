@@ -1,12 +1,16 @@
-+++
-date = "2024-11-21"
-title = "Building a Responsive Blog With 0-56 Lines Of JavaScript"
-author = "Barr"
-keywords = ["Blog", "HTML", "CSS", "JavaScript"]
-description = 'My “Hello World” post about how I made this blog with no frameworks and client-side dependencies.'
-comments = true
-summary = "For a long time I wanted to write more code, but didn't have a good reason to.\nNow I have a solution: dump it all on a blog, maybe someone can learn something from it.\nI'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm pretty allergic to frameworks.\nIt can't be that hard to write a basic blog without one, right?"
-+++
+---
+date: 2024-11-21
+title: Building a Responsive Blog With 56 Lines Of JavaScript
+author: Barr
+keywords: [Blog, HTML, CSS, JavaScript]
+description: My “Hello World” post about how I made this blog with no frameworks and client-side dependencies.
+summary: |
+  For a long time I wanted to write more code, but didn't have a good reason to.
+  Now I have a solution: dump it all on a blog, maybe someone can learn something from it.
+  I'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm pretty allergic to frameworks.
+  It can't be that hard to write a basic blog without one, right?
+github: https://github.com/CattoFace/barrcodes/tree/pandoc
+---
 ## The Skeleton
 At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to manually write a single webpage.  
 My HTML/CSS experience can be summed up by "I know that I need wrap text in `<div>` and use Flexbox" so with some help from Google(mostly for making divs and the logo behave with CSS...), and I've got the basic body that should suffice for all of my needs:
