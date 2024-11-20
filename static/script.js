@@ -29,26 +29,26 @@ function replace_content(doc_name) { // replace the content with the requested d
   }
 }
 var r = new RegExp('^(//|[a-z]+:)', 'i'); // check for relative link
-document.addEventListener('click', e => { // replace relative links with document replacements
-  const origin = e.target.closest('a')
-  if (!origin) return; // not a link
-  let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
-  e.preventDefault() // relative links do not actually load a new webpage
-  console.log(doc_name)
-  if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
-  replace_content(doc_name)
-  history.pushState({}, "", doc_name)
-})
-document.addEventListener('mouseover', e => { // start fetching document on hover
-  const origin = e.target.closest('a')
-  if (!origin) return; // not a link
-  let doc_name = origin.getAttribute("href")
-  if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
-  if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
-  get_document(doc_name)
-})
-onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "/") // handle back button
+// document.addEventListener('click', e => { // replace relative links with document replacements
+//   const origin = e.target.closest('a')
+//   if (!origin) return; // not a link
+//   let doc_name = origin.getAttribute("href")
+//   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
+//   e.preventDefault() // relative links do not actually load a new webpage
+//   console.log(doc_name)
+//   if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
+//   replace_content(doc_name)
+//   history.pushState({}, "", doc_name)
+// })
+// document.addEventListener('mouseover', e => { // start fetching document on hover
+//   const origin = e.target.closest('a')
+//   if (!origin) return; // not a link
+//   let doc_name = origin.getAttribute("href")
+//   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
+//   if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
+//   get_document(doc_name)
+// })
+// onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "/") // handle back button
 window.addEventListener("DOMContentLoaded", _ => {
   content_div = document.getElementById("content")
   theme_button = document.getElementById("toggle_theme")

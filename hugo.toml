@@ -1,0 +1,10 @@
+baseURL = 'https://barrcodes.dev/'
+languageCode = 'en-us'
+title = 'BarrCodes'
+disableKinds = ['taxonomy', 'term']
+
+[permalinks]
+posts = "/:slugorfilename/"
+[markup]
+[markup.highlight]
+style = 'tokyonight-night'

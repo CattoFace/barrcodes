@@ -1,0 +1,14 @@
+{{define "main"}}
+{{if .PublishDate}}<div style="text-align: right" class="date"><em>{{.PublishDate | dateFormat "2006-01-02"}}</em></div>{{end}}
+<p>{{ .Summary  }}</p>
+{{if .Params.github}}<a href="{{.Params.github}}">Link To The Code On GitHub</a>{{end}}
+{{.Content}}
+<script src="https://utteranc.es/client.js"
+repo="CattoFace/barrcodes"
+issue-term="pathname"
+label="utterances"
+theme="github-dark"
+crossorigin="anonymous"
+async>
+</script>
+{{end}}

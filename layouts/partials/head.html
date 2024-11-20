@@ -1,0 +1,11 @@
+<title>{{.Page.Title}} - {{.Site.Title}}</title>
+<link rel="stylesheet" href="/style.css"/>
+<script src="/script.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta property="site_name" content="BarrCodes" />
+{{if .Params.author}}<meta name="author" content={{.Params.author}} />{{end}}
+{{if .Description}}
+<meta name="description" content={{.Description}} />
+{{end}}
+{{if .Keywords}}<meta name="keywords" content={{delimit .Keywords ", "}} />{{end}}

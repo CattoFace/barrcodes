@@ -1,15 +1,13 @@
----
-title: Exploding Pokemon As Fast As Possible
-author: Barr
-date: 2024-11-21
-keywords: [Rust, CUDA, Pokemon, Random Number Generation]
-description: Answering ShoddyCast's challenge by simulating 1 billion battles in ~1s, using Rust, and later, also CUDA.
-comments: true
-abstract: |
-  In this post I will answer [ShoddyCast](https://www.youtube.com/@ShoddyCast)'s challange and simulate Pokemon battles looking for an extremely rare sequence of results that can save a theoretical game save from a softlock using Rust, and later, also CUDA.
----
-[Link To The Code On Github](https://github.com/CattoFace/graveler-sim)
-
++++
+date = '2024-11-20T17:15:15+02:00'
+draft = true
+title = 'Exploding Pokemon As Fast As Possible'
+author = 'Barr'
+keywords = ['Rust', 'CUDA', 'Pokemon', 'Random Number Generation']
+description = "Answering ShoddyCast's challenge by simulating 1 billion battles in less than a second using Rust, and later, less than 10ms using CUDA."
+summary = "In this post I will answer [ShoddyCast](https://www.youtube.com/@ShoddyCast)'s challange and simulate Pokemon battles looking for an extremely rare sequence of results that can save a theoretical game save from a softlock using Rust, and later, also CUDA."
+github = "https://github.com/CattoFace/graveler-sim"
++++
 ## Background
   In Pokemon, it is sometimes possible to "softlock" the game, meaning putting it in a state that is impossible to progress through the main story, but the game is otherwise still functional.  
 In some cases, the softlock is not actually impossible, but simply so hard/long to fix, that it is significantly easier to simply reset the game.  
@@ -53,12 +51,15 @@ Which gets me a runtime of 7-8 minutes, already orders of magnitude faster than 
 ## Being Wise With Bits - Sub 1 Minute
 Brief explanation for bitwise operations:  
 If we have 2 `u8` numbers, let's say 7 and 10, we can apply a bitwise AND(`&`) between them to apply the logical AND operation to each of their bits:  
-7  = 0b00000111  
-&  
-10 = 0b00001010  
-=  
-2  = 0b00000010  
+```
+7  = 0b00000111
+&      &&&&&&&&
+10 = 0b00001010
+=      ========
+2  = 0b00000010
+```
 
+For this problem, AND is the only bitwise operation needed.  
 Like other basic operators, bitwise operators are a single CPU instruction, so they are very fast and very useful.
 Now how do I use these to make the code faster?  
 The naive roll simply generated a `u32`, and checked for the remainder when divided by 4, usually remainder and division are slow but for power of 2 they are optimized to bitwise operations, in this case, `x % 4` optimizes to `x & 3`, meaning "keep only the last 2 bits".  
@@ -525,6 +526,7 @@ One final benchmark, this time with the added comparison with a borrowed Desktop
 |-----------------------|---------|
 | RTX 2070 Mobile Max-Q | 31.51ms |
 | RTX 4080              | 6.36ms  |
+
 Sometimes the best optimization is just throwing more money at the problem.
 
 ## Summary
