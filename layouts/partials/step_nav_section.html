@@ -1,0 +1,8 @@
+<div style="overflow:auto">
+{{ with .Parent.Pages.Prev . }}
+  <a style="float:left;max-width:45%;" href="{{ .RelPermalink }}">Previous: {{.Title}}</a>
+{{ end }}
+{{ with .Parent.Pages.Next . }}
+  <a style="float:right;max-width:45%;" href="{{ .RelPermalink }}">Next: {{.Title}}</a>
+{{ end }}
+</div>

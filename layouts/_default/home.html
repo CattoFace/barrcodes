@@ -1,6 +1,6 @@
 {{define "main"}}
   {{.Content}}
-  {{range where site.RegularPages "Section" "posts"}}
+  {{range (site.GetPage "posts").Pages}}
     {{.Render "summary"}}
   {{end}}
 {{end}}

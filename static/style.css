@@ -95,6 +95,7 @@ footer{
 #content{
   margin: auto;
   max-width: min(80%,1000px);
+  min-width: 300px;
   line-height: 1.6;
   flex:1;
 }
