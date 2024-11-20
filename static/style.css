@@ -111,7 +111,10 @@ table {
   border: 1px solid #ddd;
   border-collapse: collapse;
 }
-td {
+td,th {
   border: 1px solid #ddd;
   padding: 0 5px 0 5px;
+}
+pre{
+  overflow-x: scroll;
 }

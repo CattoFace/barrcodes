@@ -1,6 +1,5 @@
 +++
-date = '2024-11-20T17:15:15+02:00'
-draft = true
+date = '2024-11-22'
 title = 'Exploding Pokemon As Fast As Possible'
 author = 'Barr'
 keywords = ['Rust', 'CUDA', 'Pokemon', 'Random Number Generation']
@@ -71,7 +70,7 @@ So if I had 2 random bits, I can apply AND between them, and get 0 25% of the ti
 Next, if I have a pair of 231 bit numbers, I can apply AND between them, and get the result of 231 turns at once.  
 In reality, we don't have 231 bit numbers(usually), we have powers of 2, like 32, 64, and 128.  
 `rand` can only roll `u32` and `u64`, so for now, I will use 4 64 bit numbers for each set.  
-That gets us 256 turns! Too many for this problem, but this is not an issue, using another AND operation, I can simply force the last 25 bits to always be 0.
+That gets me 256 turns! Too many for this problem, but this is not an issue, using another AND operation, I can simply force the last 25 bits to always be 0.
 ```rust
 const MASK: u64 = !((1 << 25) - 1); // !((1 << C) - 1) is a known trick to easily get a mask that keeps the rightmost C bits
 let r1 = rng.next_u64() & rng.next_u64();
@@ -118,12 +117,12 @@ panic = "abort" # abort on panic instead of unwind, removes unwinding codepaths
 codegen-units = 1 # do not split into "code generation units", a little faster code at the cost of parallel codegen
 lto = true # enable "Fat" Link-Time-Optimization, allows optimization to work across linked source files
 ```
-and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions(generally, native is not recommended when publishing code, targeting [x86-64-v1/2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is better, if at all).
+and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions[^1]
 
 ### Faster Random Number Generation
 Generating random numbers can take a while, depending on the algorithm used, every algorithm targets different things: performance, security, statistical accuracy, etc.  
 The goal here is performance, so I first replaced `rand` with `fastrand`, which implements the `wyrand` algorithm.  
-Swapping between the crates is as simple as replacing the function calls in-place, `fastrand` doesn't even require us to hand over a generated seed, it creates a thread-local one on its own(which is good enough for us):
+Swapping between the crates is as simple as replacing the function calls in-place, `fastrand` doesn't even require us to hand over a generated seed, it creates a thread-local one on its own:
 ```rust
 fn roll() -> u32 {
     let r1 = (fastrand::u64(..) & fastrand::u64(..)).count_ones();
@@ -141,6 +140,7 @@ So comparing the old solution with these changes using hyperfine, the results ar
 | fastrand | 11.552s      |
 | profile  | 35.526s      |
 | both     | 6.848s       |
+
 The random number generation took a significant amount of the time before, and there is a massive improvement from using a faster implementation.
 
 ## SIMD Is Fast
@@ -282,6 +282,7 @@ Running the 1/half threads/all threads version with no clock locking on both my 
 |-----------------------------------|---------------|--------------|-------------|
 | i7-10750H 6 Cores 12 Threads      | 2.78s         | 512ms        | 531ms       |
 | Ryzen 7950X3D 16 Cores 32 Threads | 1.78s         | 134ms        | 117ms       |
+
 But this is not the end of the challenge just yet, while I could not go faster on a CPU, I can go a lot faster on a device built for massively parallel computation: a GPU.
 
 ## Enter The GPU - Sub 100 Milliseconds
@@ -383,6 +384,7 @@ __syncthreads();
 `__syncthreads` is required to ensure that all the threads finished writing their own max into `max_thread_arr`.
 And that's the entire kernel, the CPU will wait for it to finish(`cudaDeviceSynchronize()`) and continue to find the max from `max_block_arr`.  
 
+### First CUDA benchmark
 CUDA benchmarking is a little more complicated than CPU benchmarking:
 
 - There is a measurable, and in this case, significant, set up time when starting a CUDA program.
@@ -424,7 +426,7 @@ Because I am working with 32 bit integers, I implemented a new little trick that
 7 pairs of rolls give 448 bits, that combine to 224 turns, meaning I need 7 more turns, made out of 14 bits.  
 1 more roll is 32 bits, enough to fill the missing bits for 2 simulations.  
 This means that with 29 integer rolls, 2 simulations can be generated(instead of the previous 32 rolls).  
-It's not a huge difference, at best I'll get a ~10% improvement(~10% less rolls).
+It's not a huge difference, at best I'll get a ~10% improvement(~10% less rolls).  
 So now the loop body looks like this(also reduced the loop count to 500 million):
 ```c++
     int count1 = 0;
@@ -463,7 +465,7 @@ This shuffle primitive fetches a local variable from another thread inside the s
   max_t = max(max_t, __shfl_down_sync(0xFFFFFFFF, max_t, 2));
   max_t = max(max_t, __shfl_down_sync(0xFFFFFFFF, max_t, 1));
 ```
-`__syncwarp` is the same as `__syncthreads` but only needs to sync threads within the same warp.
+`__syncwarp` is the same as `__syncthreads` but only needs to sync threads within the same warp.  
 A warp is a group of 32 threads that start execution together, but more importantly, allow us to easily move variables between them.  
 Lets break down one of these calls: `__shfl_down_sync(0xFFFFFFFF, max_t,16)`  
 `0xFFFFFFFF` means all the threads within the warp will participate in the shuffle.  
@@ -532,3 +534,5 @@ Sometimes the best optimization is just throwing more money at the problem.
 ## Summary
 Optimizing code is a lot of fun, and I'm pretty satisfied with the results I achieved and the things I learned.  
 The final version of the solutions is available on my [GitHub](https://github.com/CattoFace/graveler-sim) (the CUDA code is in the cuda directory)
+
+[^1]:generally, native is not recommended when publishing code, targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default v1 at all.
