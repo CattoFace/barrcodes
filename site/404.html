@@ -11,19 +11,7 @@
     <link rel="stylesheet" href="highlight.css"/>
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-$for(author-meta)$
-  <meta name="author" content="$author-meta$" />
-$endfor$
-$if(date-meta)$
-  <meta name="dcterms.date" content="$date-meta$" />
-$endif$
-$if(keywords)$
-  <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
-$endif$
-$if(description-meta)$
-  <meta name="description" content="$description-meta$" />
-$endif$
-<title>BarrCodes - $pagetitle$</title>
+<title>BarrCodes - Page Not Found</title>
 </head>
 <body>
 <header class="header">
@@ -35,29 +23,8 @@ $endif$
   <button id="toggle_theme" onclick="toggle_theme()">Dark<br/>Theme</button>
 </header>
 <div id="content">
-$if(title)$
-<h1 id="title" class="title">$title$</h1>
-$if(subtitle)$
-<p class="subtitle">$subtitle$</p>
-$endif$
-$if(date)$
-<div style="text-align: right" class="date"><em>$date$</em></div>
-$endif$
-$if(abstract)$
-<div class="abstract">
-$abstract$
-</div>
-$endif$
-$endif$
-$if(toc)$
-<nav id="$idprefix$TOC" role="doc-toc">
-$if(toc-title)$
-<h2 id="$idprefix$toc-title">$toc-title$</h2>
-$endif$
-$table-of-contents$
-</nav>
-$endif$
-$body$
+<h1 id="title" class="title">Page Not Found</h1>
+<p>Page Not Found</p>
 </div>
 <footer>
   <a class="footeritem" href="/">
