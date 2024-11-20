@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on BarrCodes</title>
+    <link>http://localhost:40795/posts/</link>
+    <description>Recent content in Posts on BarrCodes</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 22 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:40795/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploding Pokemon As Fast As Possible</title>
+      <link>http://localhost:40795/graveler-simulation/</link>
+      <pubDate>Fri, 22 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40795/graveler-simulation/</guid>
+      <description>In this post I will answer &lt;a href=&#34;https://www.youtube.com/@ShoddyCast&#34;&gt;ShoddyCast&lt;/a&gt;&amp;rsquo;s challange and simulate Pokemon battles looking for an extremely rare sequence of results that can save a theoretical game save from a softlock using Rust, and later, also CUDA.</description>
+    </item>
+    <item>
+      <title>Building a Responsive Blog With 56 Lines Of JavaScript</title>
+      <link>http://localhost:40795/blog-building/</link>
+      <pubDate>Thu, 21 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40795/blog-building/</guid>
+      <description>For a long time I wanted to write more code, but didn&amp;rsquo;t have a good reason to.&#xA;Now I have a solution: dump it all on a blog, maybe someone can learn something from it.&#xA;I&amp;rsquo;m not a big fan of front-end design, JavaScript, and bloat in general, so I&amp;rsquo;m pretty allergic to frameworks.&#xA;It can&amp;rsquo;t be that hard to write a basic blog without one, right?</description>
+    </item>
+  </channel>
+</rss>

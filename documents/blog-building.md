@@ -226,7 +226,7 @@ I can find absolutely no explanation for this behaviour.
 
 ## Summary
 As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
-Of course modern frameworks have upsides compared to this, there is also [Hugo](https://gohugo.io/), the static website generator written in Go, which pretty much does exactly what I'm doing with `pandoc` plus a few more web and blog oriented features, but I wanted to see what I can do with as little as possible, it's possible that I'll switch to it in the future.
+Of course modern frameworks have upsides compared to this, there is also [Hugo](https://gohugo.io/), the static website generator written in Go, which pretty much does exactly what I'm doing with `pandoc` plus a few more web and blog oriented features, but I wanted to see what I can do with as little as possible, it's possible that I'll switch to it in the future.  
 Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([utterances](https://utteranc.es/) looks like an interesting solution, might add it to all articles later as part of the `pandoc` templates).  
 Maybe it *will* be nicer in the future, but for now, this is all I need.
 
