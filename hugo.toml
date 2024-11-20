@@ -2,6 +2,7 @@ baseURL = 'https://barrcodes.dev/'
 languageCode = 'en-us'
 title = 'BarrCodes'
 disableKinds = ['taxonomy', 'term']
+enableRobotsTXT = true
 
 [permalinks]
 posts = "/:slugorfilename/"
