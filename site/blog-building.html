@@ -15,7 +15,7 @@
   <meta name="dcterms.date" content="2024-11-20" />
   <meta name="keywords" content="Blog, HTML, CSS, JavaScript" />
   <meta name="description" content="My “Hello World” post about how I made this blog with no frameworks and client-side dependencies." />
-<title>BarrCodes - Building a blog in 2024 with 56 lines of JavaScript</title>
+<title>BarrCodes - Building a Responsive Blog With 56 Lines Of JavaScript</title>
 </head>
 <body>
 <header class="header">
@@ -27,7 +27,7 @@
   <button id="toggle_theme" onclick="toggle_theme()">Dark<br/>Theme</button>
 </header>
 <div id="content">
-<h1 id="title" class="title">Building a blog in 2024 with 56 lines of
+<h1 id="title" class="title">Building a Responsive Blog With 56 Lines Of
 JavaScript</h1>
 <div style="text-align: right" class="date"><em>2024-11-20</em></div>
 <div class="abstract">
@@ -330,11 +330,18 @@ and performant blog, or even a lot of JavaScript, the <a
 href="script.js">script.js</a> file is exactly 56 lines long, without
 any unreadable minification.<a href="#fn3" class="footnote-ref"
 id="fnref3" role="doc-noteref"><sup>3</sup></a><br />
-Sure, it could be nicer, it could have a dynamic home page that doesn’t
-need to be updated when a new article is published, it could have a
-comments system so other people can more easily send feedback(<a
+Of course modern frameworks have upsides compared to this, there is also
+<a href="https://gohugo.io/">Hugo</a>, the static website generator
+written in Go, which pretty much does exactly what I’m doing with
+<code>pandoc</code> plus a few more web and blog oriented features, but
+I wanted to see what I can do with as little as possible, it’s possible
+that I’ll switch to it in the future. Sure, it could be nicer, it could
+have a dynamic home page that doesn’t need to be updated when a new
+article is published, it could have a comments system so other people
+can more easily send feedback(<a
 href="https://utteranc.es/">utterances</a> looks like an interesting
-solution, might add it to all articles later).<br />
+solution, might add it to all articles later, edit: I did add it as part
+of the <code>pandoc</code> template).<br />
 Maybe it <em>will</em> be nicer in the future, but for now, this is all
 I need.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
@@ -355,6 +362,14 @@ is what it is.<a href="#fnref3" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
+<script src="https://utteranc.es/client.js"
+repo="CattoFace/barrcodes"
+issue-term="pathname"
+label="utterances"
+theme="github-dark"
+crossorigin="anonymous"
+async>
+</script>
 </div>
 <footer>
   <a class="footeritem" href="/">

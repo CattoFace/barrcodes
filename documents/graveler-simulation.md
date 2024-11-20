@@ -3,6 +3,8 @@ title: Exploding Pokemon As Fast As Possible
 author: Barr
 date: 2024-11-21
 keywords: [Rust, CUDA, Pokemon, Random Number Generation]
+description: Answering ShoddyCast's challenge by simulating 1 billion battles in ~1s, using Rust, and later, also CUDA.
+comments: true
 abstract: |
   In this post I will answer [ShoddyCast](https://www.youtube.com/@ShoddyCast)'s challange and simulate Pokemon battles looking for an extremely rare sequence of results that can save a theoretical game save from a softlock using Rust, and later, also CUDA.
 ---
