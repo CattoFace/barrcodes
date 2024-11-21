@@ -3,6 +3,14 @@
 <span>B</span><span>a</span><span>r</span><span>r</span><span>C</span><span>o</span><span>d</span><span>e</span><span>s</span>
 </div>
   <a class="headeritem" href="/">Home</a>
-  <a class="headeritem" href="about">About Me</a>
-  <button id="toggle_theme" onclick="toggle_theme()">Dark<br/>Theme</button>
+  <a class="headeritem" href="/about/">About Me</a>
+  <div id="theme_select" class="headeritem">
+   <label for="theme_select_inner">Theme: </label>
+    <select onchange=set_theme(this.value) id="theme_select_inner">
+      <option value="light dark">System</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
+
 </header>

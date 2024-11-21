@@ -1,56 +1,54 @@
+function set_theme(color_scheme) { // toggle between dark and light theme(default dark)
+  document.body.style.setProperty("color-scheme", color_scheme)
+  localStorage.setItem('color-scheme', color_scheme)
+}
 const cache = new Map()
-let theme_button, content_div // filled when DOM loads
-function toggle_theme() { // toggle between dark and light theme(default dark)
-  const light = document.body.classList.toggle("light")
-  theme_button.innerHTML = light ? "Light<br/>Theme" : "Dark<br/>Theme"
-  localStorage.setItem('light_mode', light)
-}
-function get_document(doc_name) { // download the requested document if it is not already in cache
-  let doc = cache.get(doc_name)
-  if (!doc) {
-    doc = fetch("fragment/" + doc_name).then(response => response.text())
-    cache.set(doc_name, doc) // doc is a promise until resolved by replace_content
+function get_post(post_name) { // download the requested document if it is not already in cache
+  let post = cache.get(post_name)
+  if (!post) {
+    main = fetch(post_name + "main-only.html").then(response => response.text())
+    head = fetch(post_name + "head-only.html").then(response => response.text())
+    post = [head, main]
+    cache.set(post_name, post) // post is a promise until resolved by replace_content
   }
-  return doc
+  return post
 }
-function replace_content(doc_name) { // replace the content with the requested document
-  let doc = get_document(doc_name)
-  if (doc instanceof Promise) { // if promise, convert to actual doc and save
-    doc.then(resolved => {
-      cache.set(doc_name, resolved)
-      content_div.innerHTML = resolved
-      title = document.getElementById("title")
-      document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
+function replace_content(post_name) {
+  [head, main] = get_post(post_name)
+  if (head instanceof Promise) {// if promise, convert to actual post and save
+    Promise.all([head, main]).then(([head, main]) => {
+      document.head.innerHTML = head
+      document.getElementById("content").innerHTML = main
+      cache.set(post_name, [head, main])
     })
   } else {
-    content_div.innerHTML = doc
-    title = document.getElementById("title")
-    document.title = "BarrCodes - " + (title ? title.textContent : doc_name)
+    document.head.innerHTML = head
+    document.getElementById("content").innerHTML = main
   }
 }
 var r = new RegExp('^(//|[a-z]+:)', 'i'); // check for relative link
-// document.addEventListener('click', e => { // replace relative links with document replacements
-//   const origin = e.target.closest('a')
-//   if (!origin) return; // not a link
-//   let doc_name = origin.getAttribute("href")
-//   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
-//   e.preventDefault() // relative links do not actually load a new webpage
-//   console.log(doc_name)
-//   if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
-//   replace_content(doc_name)
-//   history.pushState({}, "", doc_name)
-// })
-// document.addEventListener('mouseover', e => { // start fetching document on hover
-//   const origin = e.target.closest('a')
-//   if (!origin) return; // not a link
-//   let doc_name = origin.getAttribute("href")
-//   if (r.test(doc_name) || doc_name.indexOf('.') > -1 || doc_name.charAt(0) == '#') return; // not link to a document
-//   if ((window.location.pathname.slice(1) || "/") == doc_name) return; // already on that page
-//   get_document(doc_name)
-// })
-// onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "/") // handle back button
+document.addEventListener('click', e => { // replace relative links with document replacements
+  const origin = e.target.closest('a')
+  if (!origin) return; // not a link
+  let post_name = origin.getAttribute("href")
+  if (r.test(post_name) || post_name.indexOf('.') > -1 || post_name.charAt(0) == '#') return; // not link to a document
+  e.preventDefault() // relative links do not actually load a new webpage
+  console.log(post_name)
+  if (window.location.pathname == post_name) return; // already on that page
+  replace_content(post_name)
+  history.pushState({}, "", post_name)
+})
+document.addEventListener('mouseover', e => { // start fetching document on hover
+  const origin = e.target.closest('a')
+  if (!origin) return; // not a link
+  let post_name = origin.getAttribute("href")
+  if (r.test(post_name) || post_name.indexOf('.') > -1 || post_name.charAt(0) == '#') return; // not link to a document
+  if (window.location.pathname == post_name) return; // already on that page
+  get_post(post_name)
+})
+onpopstate = (_) => replace_content(window.location.pathname) // handle back button
 window.addEventListener("DOMContentLoaded", _ => {
-  content_div = document.getElementById("content")
-  theme_button = document.getElementById("toggle_theme")
-  if (localStorage.getItem("light_mode") === "true") toggle_theme(); // load saved theme
+  color_scheme = localStorage.getItem("color-scheme") || "light dark" // load saved scheme
+  set_theme(color_scheme)
+  document.getElementById("theme_select_inner").value = color_scheme
 })

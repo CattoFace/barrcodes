@@ -4,8 +4,15 @@ title = 'BarrCodes'
 disableKinds = ['taxonomy', 'term']
 enableRobotsTXT = true
 cleanDestinationDir = true
-[permalinks]
-posts = "/:slugorfilename/"
-[markup]
 [markup.highlight]
 style = 'tokyonight-night'
+[outputFormats.main-only]
+mediaType = "text/html"
+baseName = "main-only"
+[outputFormats.head-only]
+mediaType = "text/html"
+baseName = "head-only"
+[outputs]
+home = ['html', 'main-only', 'head-only', 'rss']
+section = ['html', 'main-only', 'head-only', 'rss']
+page = ['html', 'main-only', 'head-only']
