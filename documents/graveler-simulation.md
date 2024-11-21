@@ -1,7 +1,7 @@
 ---
 title: Exploding Pokemon As Fast As Possible
 author: Barr
-date: 2024-11-21
+date: 2024-11-22
 keywords: [Rust, CUDA, Pokemon, Random Number Generation]
 description: Answering ShoddyCast's challenge by simulating 1 billion battles in ~1s, using Rust, and later, also CUDA.
 comments: true
