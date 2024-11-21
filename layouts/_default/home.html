@@ -1,4 +1,5 @@
 {{define "main"}}
+  {{.Summary}}
   {{.Content}}
   {{range (site.GetPage "posts").Pages.ByDate.Reverse}}
     {{.Render "description"}}

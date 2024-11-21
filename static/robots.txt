@@ -1,0 +1,7 @@
+User-agent: *
+User-agent: GoogleBot
+User-agent: AdsBot-Google
+Allow: /
+Disallow: */main-only.html
+Disallow: */head-only.html
+Sitemap: https://barrcodes.dev/sitemap.xml

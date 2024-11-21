@@ -2,7 +2,6 @@ baseURL = 'https://barrcodes.dev/'
 languageCode = 'en-us'
 title = 'BarrCodes'
 disableKinds = ['taxonomy', 'term']
-enableRobotsTXT = true
 cleanDestinationDir = true
 markup.highlight.noClasses = false
 [frontmatter]
@@ -17,3 +16,5 @@ baseName = "head-only"
 home = ['html', 'main-only', 'head-only', 'rss']
 section = ['html', 'main-only', 'head-only', 'rss']
 page = ['html', 'main-only', 'head-only']
+[sitemap]
+changefreq = "weekly"

@@ -1,4 +1,4 @@
-<title>{{.Page.Title}} - {{.Site.Title}}</title>
+<title>{{if not .IsHome}}{{.Page.Title}} - {{end}}{{.Site.Title}}</title>
 <link rel="stylesheet" href="/style.css"/>
 <link rel="stylesheet" href="/syntax.css"/>
 <script src="/script.js"></script>

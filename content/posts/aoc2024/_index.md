@@ -6,6 +6,8 @@ keywords: [aoc2024, Advent Of Code, Rust]
 description: Documenting my Rust solutions for the Advent of Code 2024 challenge.
 summary: |
   [Advent of Code](https://adventofcode.com/2024/about) is yearly challenge that happens over the month of December, with a new problem opening every day until the 25th, like an [Advent calender](https://adventofcode.com/2024/about).  
+sitemap:
+  changeFreq: daily
 ---
 Here I will document all of my Rust solutions over the month while solving them:
 

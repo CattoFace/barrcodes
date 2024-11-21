@@ -60,6 +60,8 @@ header, footer{
 }
 footer{
   justify-content:center;
+  margin-top: 1.5rem;
+  padding-top: 5px;
 }
 .headeritem{
   color: #EEEEEE;
