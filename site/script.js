@@ -8,7 +8,7 @@ function toggle_theme() { // toggle between dark and light theme(default dark)
 function get_document(doc_name) { // download the requested document if it is not already in cache
   let doc = cache.get(doc_name)
   if (!doc) {
-    doc = fetch("fragment/" + doc_name).then(response => response.text())
+    doc = fetch(doc_name + "-fragment").then(response => response.text())
     cache.set(doc_name, doc) // doc is a promise until resolved by replace_content
   }
   return doc

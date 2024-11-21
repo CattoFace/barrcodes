@@ -1,9 +1,9 @@
 #!/bin/bash
 for md in documents/*.md; do
   base=$(basename $md)
-  html=${base::-3}.html
-  full=site/$html
-  fragment=site/fragment/$html
+  base=${base::-3}
+  full=site/$base.html
+  fragment=site/$base-fragment.html
   if [ $md -nt $full ] || [ $md -nt $fragment ]; then
     echo "Updating $base"
     pandoc $md -o $full --template full_template.html
