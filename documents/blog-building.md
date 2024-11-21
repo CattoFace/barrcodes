@@ -11,6 +11,8 @@ abstract: |
   I'm not a big fan of front-end design, JavaScript, and bloat in general, so I'm pretty allergic to frameworks.  
   It can't be that hard to write a basic blog without one, right?
 ---
+Note: This site is the original one built in this post, it is being kept to showcase the result of the post.  
+The real website has moved to [Hugo](https://gohugo.io/), and it is still located at [BarrCodes](https://barrcodes.dev)
 ## The Skeleton
 At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to manually write a single webpage.  
 My HTML/CSS experience can be summed up by "I know that I need wrap text in `<div>` and use Flexbox" so with some help from Google(mostly for making divs and the logo behave with CSS...), and I've got the basic body that should suffice for all of my needs:
@@ -227,8 +229,7 @@ I can find absolutely no explanation for this behaviour.
 ## Summary
 As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
 Of course modern frameworks have upsides compared to this, there is also [Hugo](https://gohugo.io/), the static website generator written in Go, which pretty much does exactly what I'm doing with `pandoc` plus a few more web and blog oriented features, but I wanted to see what I can do with as little as possible, it's possible that I'll switch to it in the future.  
-Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([utterances](https://utteranc.es/) looks like an interesting solution, might add it to all articles later as part of the `pandoc` templates).  
-Maybe it *will* be nicer in the future, but for now, this is all I need.
+Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([giscus](https://giscus.app/) looks like an interesting solution, might add it to all articles later as part of the `pandoc` templates).  
 
 [^1]:I lied a little, font picking and the footer design happened after implementing the document system but I'd rather keep all the design writing together.
 [^2]:This was actually added as I was testing this post and learning that the `script.js` link and the reference links are broken.

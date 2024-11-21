@@ -10,6 +10,9 @@ abstract: |
 ---
 [Link To The Code On Github](https://github.com/CattoFace/graveler-sim)
 
+Note: This site is the original one built in [the other post](/site/blog-building), it is being kept so showcase the result of the post.  
+The real website has moved to [Hugo](https://gohugo.io/), and it is still located at [BarrCodes](https://barrcodes.dev)
+
 ## Background
   In Pokemon, it is sometimes possible to "softlock" the game, meaning putting it in a state that is impossible to progress through the main story, but the game is otherwise still functional.  
 In some cases, the softlock is not actually impossible, but simply so hard/long to fix, that it is significantly easier to simply reset the game.  
