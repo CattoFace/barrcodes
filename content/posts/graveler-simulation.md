@@ -59,7 +59,7 @@ If we have 2 `u8` numbers, let's say 7 and 10, we can apply a bitwise AND(`&`) b
 ```
 
 For this problem, AND is the only bitwise operation needed.  
-Like other basic operators, bitwise operators are a single CPU instruction, so they are very fast and very useful.
+Like other basic operators, bitwise operators are a single CPU instruction, so they are very fast and very useful.  
 Now how do I use these to make the code faster?  
 The naive roll simply generated a `u32`, and checked for the remainder when divided by 4, usually remainder and division are slow but for power of 2 they are optimized to bitwise operations, in this case, `x % 4` optimizes to `x & 3`, meaning "keep only the last 2 bits".  
 Which means, I am rolling 32 bits, using the last 2, and throwing away the other 30, not very efficient.

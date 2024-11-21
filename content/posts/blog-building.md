@@ -57,9 +57,9 @@ done
 ```
 This script converts the document twice:  
 Once to a full html page that contains the article, for the initial website loading.  
-The [full template](assets/full_template.html) combines the skeleton I built earlier with the document.
+The [full template](https://github.com/CattoFace/barrcodes/blob/pandoc/full_template.html) combines the skeleton I built earlier with the document.
 And a second time to a fragment that can be quickly embedded inside the page body, for relative navigation.  
-The [fragment template](assets/fragment_template.html) simply combines the metadata section with the text.  
+The [fragment template](https://github.com/CattoFace/barrcodes/blob/pandoc/fragment_template.html) simply combines the metadata section with the text.  
 An earlier version only had the fragment, and loaded it into a blank body on the initial load, but that solution makes it impossible to statically serve metadata headers like the title.
 The full HTML pages are already enough to have a functional blog with 0 lines of JavaScript, but my goal is to make it as fast as possible to navigate, which is why I am going to need those article fragments.
 And another useful trick this script enables: I can run `watch .git/hooks/pre-commit` to have the HTML regenerate when saved and served instantly on my local web server(Take that "Fast Refresh"!).
@@ -227,7 +227,7 @@ This behaviour goes back to normal the moment the call ends.--
 I can find absolutely no explanation for this behaviour.
 
 ## Summary
-As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
+As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](https://github.com/CattoFace/barrcodes/blob/pandoc/site/script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
 Of course modern frameworks have upsides compared to this, there is also [Hugo](https://gohugo.io/), the static website generator written in Go, which pretty much does exactly what I'm doing with `pandoc` plus a few more web and blog oriented features, but I wanted to see what I can do with as little as possible, it's possible that I'll switch to it in the future.  
 Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([giscus](https://giscus.app/) looks like an interesting solution, might add it to all articles later as part of the `pandoc` templates).  
 
