@@ -4,11 +4,9 @@ title = 'BarrCodes'
 disableKinds = ['taxonomy', 'term']
 enableRobotsTXT = true
 cleanDestinationDir = true
+markup.highlight.noClasses = false
 [frontmatter]
 publishDate = ['publishDate']
-[markup]
-[markup.highlight]
-style = 'tokyonight-storm'
 [outputFormats.main-only]
 mediaType = "text/html"
 baseName = "main-only"
