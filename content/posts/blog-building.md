@@ -3,7 +3,7 @@ publishDate: 2024-11-18
 title: Building a Responsive Blog With 56 Lines Of JavaScript
 author: Barr
 keywords: [Blog, HTML, CSS, JavaScript]
-description: My “Hello World” post about how I made this blog with no frameworks and client-side dependencies.
+description: My “Hello World” post about how I made a blog with just a markdown parser and no client-side dependencies.
 summary: |
   For a long time I wanted to write more code, but didn't have a good reason to.  
   Now I have a solution: dump it all on a blog, maybe someone can learn something from it.  
