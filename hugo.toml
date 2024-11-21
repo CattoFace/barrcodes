@@ -8,7 +8,7 @@ cleanDestinationDir = true
 publishDate = ['publishDate']
 [markup]
 [markup.highlight]
-style = 'onedark'
+style = 'tokyonight-storm'
 [outputFormats.main-only]
 mediaType = "text/html"
 baseName = "main-only"
