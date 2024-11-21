@@ -1,6 +1,6 @@
 {{define "main"}}
   {{.Content}}
-  {{range sort (site.GetPage "posts").Pages "PublishDate" "desc"}}
+  {{range (site.GetPage "posts").Pages.ByDate.Reverse}}
     {{.Render "description"}}
   {{end}}
 {{end}}

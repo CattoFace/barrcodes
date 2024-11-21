@@ -5,7 +5,7 @@ disableKinds = ['taxonomy', 'term']
 enableRobotsTXT = true
 cleanDestinationDir = true
 [frontmatter]
-date = ["date"]
+publishDate = ['publishDate']
 [markup.highlight]
 style = 'tokyonight-night'
 [outputFormats.main-only]
