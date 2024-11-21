@@ -1,12 +1,10 @@
 ---
-date: 2024-11-21
-draft: true
 title: Advent Of Code 2024
 author: Barr
 keywords: [aoc2024, Advent Of Code, Rust]
-description: 
-summary:
+description: Documenting my solutions for the Advent of Code 2024 challenge.
+summary: |
+  [Advent of Code](https://adventofcode.com/2024/about) is yearly challenge that happens over the month of December, with a new problem opening every day until the 25th, like an [Advent calender](https://adventofcode.com/2024/about).  
 ---
-advent of code is...
 Here I will document all of my solutions over the month while solving them:
 

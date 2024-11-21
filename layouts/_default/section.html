@@ -1,7 +1,10 @@
 {{define "main"}}
   {{.Content}}
+  {{with .PublishDate}}<div style="text-align: right" class="date"><em>{{. | dateFormat "2006-01-02"}}</em></div>{{end}}
+  {{with .Summary}}<p>{{.}}</p>{{end}}
+  {{with .Params.github}}<a href="{{.}}">Link To The Code On GitHub</a>{{end}}
   {{range .Pages}}
-    {{.Render "summary"}}
+    {{.Render "description"}}
   {{end}}
 {{partial "step_nav_section.html" .}}
 {{end}}

@@ -1,3 +1,7 @@
 {{define "main"}}
-  {{.Content}}
+{{with .PublishDate}}<div style="text-align: right" class="date"><em>{{. | dateFormat "2006-01-02"}}</em></div>{{end}}
+<p>{{ .Summary  }}</p>
+{{with .Params.github}}<a href="{{.}}">Link To The Code On GitHub</a>{{end}}
+{{.Content}}
+{{partial "step_nav.html" .}}
 {{end}}

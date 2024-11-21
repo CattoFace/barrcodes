@@ -4,6 +4,8 @@ title = 'BarrCodes'
 disableKinds = ['taxonomy', 'term']
 enableRobotsTXT = true
 cleanDestinationDir = true
+[frontmatter]
+date = ["date"]
 [markup.highlight]
 style = 'tokyonight-night'
 [outputFormats.main-only]

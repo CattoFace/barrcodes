@@ -1,0 +1,3 @@
+<h2><a href="{{ .RelPermalink }}">{{.LinkTitle}}</a></h2>
+{{with .PublishDate}}<div style="text-align: right" class="date"><em>{{. | dateFormat "2006-01-02"}}</em></div>{{end}}
+<p>{{.Description}}</p>

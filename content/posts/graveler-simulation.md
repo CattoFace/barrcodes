@@ -1,5 +1,5 @@
 ---
-date: 2024-11-22
+publishDate: 2024-11-21
 title: Exploding Pokemon As Fast As Possible
 author: Barr
 keywords: [Rust, CUDA, Pokemon, Random Number Generation]

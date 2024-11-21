@@ -13,6 +13,25 @@ function get_post(post_name) { // download the requested document if it is not a
   }
   return post
 }
+function insert_comments() {
+  const comment_section = document.createElement("script")
+  comment_section.setAttribute("src", "https://giscus.app/client.js")
+  comment_section.setAttribute("data-repo", "CattoFace/barrcodes")
+  comment_section.setAttribute("data-repo-id", "R_kgDOMXqdqQ")
+  comment_section.setAttribute("category", "Announcements")
+  comment_section.setAttribute("category-id", "DIC_kwDOMXqdqc4CkeUH")
+  comment_section.setAttribute("mapping", "pathname")
+  comment_section.setAttribute("strict", "1")
+  comment_section.setAttribute("reactions-enabled", "1")
+  comment_section.setAttribute("emit-metadata", "0")
+  comment_section.setAttribute("input-position", "top")
+  comment_section.setAttribute("theme", "preferred_color_scheme")
+  comment_section.setAttribute("lang", "en")
+  comment_section.setAttribute("crossorigin", "anonymous")
+  comment_section.setAttribute("async", "")
+  document.getElementById("content").appendChild(comment_section)
+
+}
 function replace_content(post_name) {
   [head, main] = get_post(post_name)
   if (head instanceof Promise) {// if promise, convert to actual post and save
@@ -20,10 +39,16 @@ function replace_content(post_name) {
       document.head.innerHTML = head
       document.getElementById("content").innerHTML = main
       cache.set(post_name, [head, main])
+      if (post_name.startsWith("/posts/")) { // TODO there is probably a better way
+        insert_comments()
+      }
     })
   } else {
     document.head.innerHTML = head
     document.getElementById("content").innerHTML = main
+    if (post_name.startsWith("/posts/")) { // TODO there is probably a better way
+      insert_comments()
+    }
   }
 }
 var r = new RegExp('^(//|[a-z]+:)', 'i'); // check for relative link
@@ -33,7 +58,6 @@ document.addEventListener('click', e => { // replace relative links with documen
   let post_name = origin.getAttribute("href")
   if (r.test(post_name) || post_name.indexOf('.') > -1 || post_name.charAt(0) == '#') return; // not link to a document
   e.preventDefault() // relative links do not actually load a new webpage
-  console.log(post_name)
   if (window.location.pathname == post_name) return; // already on that page
   replace_content(post_name)
   history.pushState({}, "", post_name)
