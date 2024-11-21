@@ -6,6 +6,7 @@ enableRobotsTXT = true
 cleanDestinationDir = true
 [frontmatter]
 publishDate = ['publishDate']
+[markup]
 [markup.highlight]
 style = 'tokyonight-night'
 [outputFormats.main-only]
