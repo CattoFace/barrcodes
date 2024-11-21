@@ -12,6 +12,7 @@ summary: |
 github: https://github.com/CattoFace/barrcodes/tree/pandoc
 ---
 Note: Since writing this post, I have switched to using [Hugo](https://gohugo.io/), the original website built in this post is kept(with a few fixes to work with GitHub Pages paths) on a [GitHub Pages](https://cattoface.github.io/barrcodes/site/) site
+
 ## The Skeleton
 At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to manually write a single webpage.  
 My HTML/CSS experience can be summed up by "I know that I need wrap text in `<div>` and use Flexbox" so with some help from Google(mostly for making divs and the logo behave with CSS...), and I've got the basic body that should suffice for all of my needs:
@@ -228,8 +229,7 @@ I can find absolutely no explanation for this behaviour.
 ## Summary
 As expected, I don't actually need any frameworks to build a basic and performant blog, or even a lot of JavaScript, the [script.js](script.js) file is exactly 56 lines long, without any unreadable minification.[^3]  
 Of course modern frameworks have upsides compared to this, there is also [Hugo](https://gohugo.io/), the static website generator written in Go, which pretty much does exactly what I'm doing with `pandoc` plus a few more web and blog oriented features, but I wanted to see what I can do with as little as possible, it's possible that I'll switch to it in the future.  
-Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([utterances](https://utteranc.es/) looks like an interesting solution, might add it to all articles later).  
-Maybe it *will* be nicer in the future, but for now, this is all I need.
+Sure, it could be nicer, it could have a dynamic home page that doesn't need to be updated when a new article is published, it could have a comments system so other people can more easily send feedback([giscus](https://giscus.app/) looks like an interesting solution, might add it to all articles later as part of the `pandoc` templates).  
 
 [^1]:I lied a little, font picking and the footer design happened after implementing the document system but I'd rather keep all the design writing together.
 [^2]:This was actually added as I was testing this post and learning that the `script.js` link and the reference links are broken.
