@@ -11,6 +11,7 @@ summary: |
   It can't be that hard to write a basic blog without one, right?
 github: https://github.com/CattoFace/barrcodes/tree/pandoc
 ---
+Note: Since writing this post, I have switched to using [Hugo](https://gohugo.io/), the original website built in this post is kept(with a few fixes to work with GitHub Pages paths) on a [GitHub Pages](https://cattoface.github.io/barrcodes/site/) site
 ## The Skeleton
 At it's core, a blog is just one page with different chunks of text in the middle of the header-footer sandwich, so ideally, I will only need to manually write a single webpage.  
 My HTML/CSS experience can be summed up by "I know that I need wrap text in `<div>` and use Flexbox" so with some help from Google(mostly for making divs and the logo behave with CSS...), and I've got the basic body that should suffice for all of my needs:
