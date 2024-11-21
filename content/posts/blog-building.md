@@ -98,7 +98,7 @@ But of course, this is not the end, this solution has multiple things to improve
 - It can go faster
 
 ## Improving Things:
-After a quick google search, I learned that so solve the backwards bug, I simply need to listen to the `popstate` event that happens when a browser goes back, and set the right document content:
+After a quick google search, I learned that to solve the backwards bug, I simply need to listen to the `popstate` event that happens when a browser goes back, and set the right document content:
 ```javascript
 onpopstate = (_) => replace_content(window.location.pathname.slice(1) || "/") // handle back button
 ```
