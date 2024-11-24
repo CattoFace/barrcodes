@@ -28,6 +28,8 @@ body{
   --main-bg: light-dark(#EEEEEE,#111111);
   --main-text: light-dark(#111111,#EEEEEE);
   --link-color: light-dark(darkblue,steelblue);
+  --secondary-background: #151515;
+  --secondary-color: #EEEEEE;
   background: var(--main-bg);
   color: var(--main-text);
   font-size: 16px;
@@ -54,7 +56,7 @@ header, footer{
   width:100%;
   margin: 0;
   padding: 0;
-  background-color: #151515;
+  background-color: var(--secondary-background);
   display: flex;
   align-items: flex-end;
 }
@@ -64,11 +66,11 @@ footer{
   padding-top: 5px;
 }
 .headeritem{
-  color: #EEEEEE;
+  color: var(--secondary-color);
   margin: 0 1% 3px 1%;
 }
 .footeritem{
-  color: #EEEEEE;
+  color: var(--secondary-color);
   margin: 0 1% 3px 1%;
   text-decoration: none;
 }
@@ -114,4 +116,36 @@ td,th {
 }
 pre{
   overflow-x: scroll;
+  margin-top:0;
+}
+.pre_code{
+  background-color: var(--secondary-background);
+  color: var(--secondary-color);
+  font-family: "Electrolize";
+  font-weight: 400;
+  font-style: normal;
+  padding-left: 1rem;
+  display: flex;
+  align-items: flex-end;
+}
+.copy_code_div{
+  margin-right: 1rem;
+  margin-left: auto;
+}
+.copy_code_button{
+  background-color: #222222;
+  color: var(--secondary-color);
+  font-family: "Electrolize";
+  font-weight: 400;
+  font-style: italic;
+  height:2rem;
+  width: 4rem;
+  border:none;
+  margin:0;
+}
+.copy_code_button:hover{
+  background-color: #333333;
+}
+.copy_code_button:active{
+  background-color: #444444;
 }

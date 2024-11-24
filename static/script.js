@@ -50,6 +50,11 @@ function replace_content(post_name) {
     }
   }
 }
+function copy_code_block(e) {
+  navigator.clipboard.writeText(e.target.parentNode.parentNode.nextElementSibling.textContent)
+  e.target.innerHTML = "Copied";
+  setTimeout(() => { e.target.innerHTML = "Copy" }, 500);
+}
 var r = new RegExp('^(//|[a-z]+:)', 'i'); // check for relative link
 document.addEventListener('click', e => { // replace relative links with document replacements
   const origin = e.target.closest('a')

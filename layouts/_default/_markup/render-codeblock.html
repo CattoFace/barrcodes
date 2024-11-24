@@ -1,0 +1,9 @@
+<div>
+{{if not (eq .Type "")}}
+<div class="pre_code"><b>{{upper .Type}}</b>
+<div class="copy_code_div"><button class="copy_code_button" onclick="copy_code_block(event)">Copy</button></div>
+</div>
+{{end}}
+{{ $result := transform.HighlightCodeBlock . }}
+{{ $result.Wrapped }}
+</div>
