@@ -194,6 +194,8 @@ Thanks to [rayon](https://docs.rs/rayon/latest/rayon/), multithreading in Rust i
 In many cases all I need to do is add the crate, and turn the iterator to a parallel one(add `.into_par_iter()` before the `.map`).  
 But in this case the mutable state struct `rng` poses an issue to be solved.
 
+But first..
+
 ### The Need For More Accuracy
 Since every change so far had a big effect on performance, the setup used until now was sufficient, but when looking for more minor differences there are a few more things that help improve benchmark stability:
 
@@ -258,7 +260,7 @@ Actually, `rayon` is not even needed anymore, it can be removed from the project
         .max(local_result)
 ```
 `local_result` makes use of the main thread instead of spawning one more and waiting for the rest to finish.  
-In this case I am not concerned about the order the threads finish because they are all expected to take the same time.
+In this case I am not concerned about the order the threads finish because they are all expected to take the same time.  
 To find the ideal number of threads, I ran it with different amounts of threads.
 
 | Thread Count | Time    | Speedup compared to 1 | Speedup / threads |
