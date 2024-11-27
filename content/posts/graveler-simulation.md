@@ -122,7 +122,6 @@ and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows
 > [!WARNING]
 > Generally, `target-cpu=native` is not recommended when publishing code, since it the result is only guaranteed to run on other CPUs that have at least all of the extensions available on the compiling CPU.  
 > targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` target at all.
-{cite="https://gohugo.io" caption="Some caption"}
 
 ### Faster Random Number Generation
 Generating random numbers can take a while, depending on the algorithm used, every algorithm targets different things: performance, security, statistical accuracy, etc.  
