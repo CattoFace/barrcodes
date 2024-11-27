@@ -117,11 +117,7 @@ panic = "abort" # abort on panic instead of unwind, removes unwinding codepaths
 codegen-units = 1 # do not split into "code generation units", a little faster code at the cost of parallel codegen
 lto = true # enable "Fat" Link-Time-Optimization, allows optimization to work across linked source files
 ```
-and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions.
-
-> [!WARNING]
-> Generally, `target-cpu=native` is not recommended when publishing code, since the result is only guaranteed to run on other CPUs that have at least all of the extensions available on the compiling CPU.  
-> targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` target at all.
+and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions.[^1]
 
 ### Faster Random Number Generation
 Generating random numbers can take a while, depending on the algorithm used, every algorithm targets different things: performance, security, statistical accuracy, etc.  
