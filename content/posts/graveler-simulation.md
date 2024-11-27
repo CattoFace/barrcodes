@@ -538,4 +538,4 @@ Sometimes the best optimization is just throwing more money at the problem.
 Optimizing code is a lot of fun, and I'm pretty satisfied with the results I achieved and the things I learned.  
 The final version of the solutions is available on my [GitHub](https://github.com/CattoFace/graveler-sim) (the CUDA code is in the cuda directory)
 
-[^1]:generally, native is not recommended when publishing code, targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default v1 at all.
+[^1]:generally, `native` is not recommended when publishing the output because the resulting executable is only guaranteed to be able to run on a CPU that has at least every extension available on the CPU used to compile. Targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` at all.
