@@ -120,7 +120,7 @@ lto = true # enable "Fat" Link-Time-Optimization, allows optimization to work ac
 and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions.
 
 > [!WARNING]
-> Generally, `target-cpu=native` is not recommended when publishing code, since it the result is only guaranteed to run on other CPUs that have at least all of the extensions available on the compiling CPU.  
+> Generally, `target-cpu=native` is not recommended when publishing code, since the result is only guaranteed to run on other CPUs that have at least all of the extensions available on the compiling CPU.  
 > targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` target at all.
 
 ### Faster Random Number Generation
