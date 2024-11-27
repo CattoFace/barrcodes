@@ -9,7 +9,7 @@ github: https://github.com/CattoFace/graveler-sim
 ---
 ## Background
   In Pokemon, it is sometimes possible to "softlock" the game, meaning putting it in a state that is impossible to progress through the main story, but the game is otherwise still functional.  
-In some cases, the softlock is not actually impossible, but simply so hard/long to fix, that it is significantly easier to simply reset the game.  
+In some cases, the softlock is not actually impossible, but simply so hard/time consuming to fix, that it is significantly easier to simply reset the game.  
 These are the sort of scenarios the YouTube channel [Pikasprey Yellow](https://www.youtube.com/@Pikasprey) explores in his videos.  
 Today I will focus on one video in particular, [Graveler's Unlikely Escape](https://www.youtube.com/watch?v=GgMl4PrdQeo), which has inspired [a video by ShoddyCast](https://www.youtube.com/watch?v=M8C8dHQE2Ro).  
 I will not go into all the little details of the softlock, but the root of the issue boils down to:
@@ -117,7 +117,12 @@ panic = "abort" # abort on panic instead of unwind, removes unwinding codepaths
 codegen-units = 1 # do not split into "code generation units", a little faster code at the cost of parallel codegen
 lto = true # enable "Fat" Link-Time-Optimization, allows optimization to work across linked source files
 ```
-and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions[^1]
+and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions.
+
+> [!WARNING]
+> Generally, `target-cpu=native` is not recommended when publishing code, since it the result is only guaranteed to run on other CPUs that have at least all of the extensions available on the compiling CPU.  
+> targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` target at all.
+{cite="https://gohugo.io" caption="Some caption"}
 
 ### Faster Random Number Generation
 Generating random numbers can take a while, depending on the algorithm used, every algorithm targets different things: performance, security, statistical accuracy, etc.  
@@ -144,7 +149,7 @@ So comparing the old solution with these changes using hyperfine, the results ar
 The random number generation took a significant amount of the time before, and there is a massive improvement from using a faster implementation.
 
 ## SIMD Is Fast
-Modern CPUs have access to SIMD(Single Instruction Multiple Data) instructions, that can operate on multiple numbers at the same time, and fortunately, the `simd_rand` crate has implementations for various PRNG algorithms that utilise these instructions.  
+Modern CPUs have access to SIMD(Single Instruction Multiple Data) instructions, that can operate on multiple numbers at the same time with a single instruction, and fortunately, the `simd_rand` crate has implementations for various PRNG algorithms that utilise these instructions.  
 For the highest performance, while ignoring minor statistical downsides, I picked the [xorshiro256plus](https://prng.di.unimi.it/) algorithm.  
 The new roll function looks like this:
 ```rust
@@ -164,7 +169,7 @@ Only CPUs with the AVX512 instruction set can actually perform operations direct
 My laptop does not have AVX512 so I don't expect a very noticeable improvement, but it will be useful when testing on a different CPU later.
 Since I only need 231 bits, I can actually fit 2 rolls for every 2 sets I generate:
 ```rust
-fn roll(rng: &mut Xoshiro256PlusX8) -> u32 {
+fn double_roll(rng: &mut Xoshiro256PlusX8) -> u32 {
     let roll = rng.next_u64x8();
     let roll2 = rng.next_u64x8();
     // if both bits are 1, that roll is a 1 out of 4
@@ -208,21 +213,21 @@ For these reasons, all benchmarks until the final one will use 10 warm-up rounds
 For comparison, the last single-threaded version takes **4.6s** under these conditions.
 
 ### The Solution
-There needs to be a state for each thread separately, one option is two use thread-local variable the functions can access:
+There needs to be a state for each thread separately, one option is to use a thread-local variable the roll function can access:
 ```rust
 thread_local! {
-    static STATE: RefCell<Xoshiro256PlusX8> = RefCell::new({ let mut seed: Xoshiro256PlusX8Seed = Default::default(); rand::thread_rng().fill_bytes(&mut *seed); Xoshiro256PlusX8::from_sUsually eed(seed) })
+    static STATE: RefCell<Xoshiro256PlusX8> = RefCell::new({ let mut seed: Xoshiro256PlusX8Seed = Default::default(); rand::thread_rng().fill_bytes(&mut *seed); Xoshiro256PlusX8::from_seed(seed) })
 }
-fn roll() -> u32 {
+fn double_roll() -> u32 {
     let roll = STATE.with_borrow_mut(|state| state.next_u64x8());
     let roll2 = STATE.with_borrow_mut(|state| state.next_u64x8());
 ```
 The time for this first multi-threaded solution is **985ms**
 
-With the way `rayon` works, here there are 1 billion tasks split into the work queues of all the threads, then when each thread finishes a task, it gets another task from the queue, and makes sure it wasn't "stolen" by another thread before executing it.  
-This is a useful model but too much for this case and adds overhead.
+With the way `rayon` works, in this case there are 1 billion tasks split into the work queues of all the threads, and when each thread finishes a task, it gets another task from the queue, and makes sure it wasn't "stolen" by another thread before executing it.  
+This is a useful model but too complicated for this problem and adds overhead.
 
-The first improvement was to only call a few functions in parallel, as many as the threads I want to use, and have each function perform 500 million / threads iterations.
+The first improvement was to only call a few functions in parallel, as many as the threads I want to use, and have each function perform (500 million / threads) iterations.
 ```rust
 fn thread_roll() -> u8 {
     // seeding the generator
@@ -230,7 +235,7 @@ fn thread_roll() -> u8 {
     rand::thread_rng().fill_bytes(&mut *seed);
     let mut rng = Xoshiro256PlusX8::from_seed(seed);
     (0..((1_000_000_000 / 2) / rayon::current_num_threads()) + 1)
-        .map(|_| double_coin_roll(&mut rng))
+        .map(|_| double_roll(&mut rng))
         .max()
         .unwrap() as u8
 }
@@ -244,7 +249,7 @@ fn par_roll() -> u8 {
 ```
 I added +1 to the roll count to account for truncation, in the worst case each thread simulates 1 more battles than needed, another solution can add 1 only to some of the threads, to get exactly 1 billion.
 
-Actually, `rayon` is not even needed anymore, it can be removed from the project completely and replaced with `std::thread`(`roll` was modified to get the amount to roll as a parameter):
+Actually, `rayon` is not even needed anymore, it can be removed from the project completely and replaced with `std::thread`(`thread_roll` was modified to get the amount to roll as a parameter):
 ```rust
     let thread_count: u32 = thread::available_parallelism().unwrap().get() as u32;
     let per_thread: u32 = 500_000_000 / thread_count + 1;
@@ -273,7 +278,7 @@ To find the ideal number of threads, I ran it with different amounts of threads.
 | 10           | 880.1ms | 5.198x                | 0.5198            |
 | 12           | 815.4ms | 5.611x                | 0.4676            |
 
-The `Speedup / threads` column helps measure at what point does tan algorithm stop scaling as well.
+The `Speedup / threads` column helps measure at what point does the algorithm stop scaling as well.
 From these results, it looks like going for more than 6 threads hardly helps, and sometimes even hurts the performance.
 Even with 6 threads the scaling was not as good as expected, only 5.279x and not 6x.
 
@@ -285,7 +290,8 @@ Running the 1/half threads/all threads version with no clock locking on both my 
 | i7-10750H 6 Cores 12 Threads      | 2.78s         | 512ms        | 531ms       |
 | Ryzen 7950X3D 16 Cores 32 Threads | 1.78s         | 134ms        | 117ms       |
 
-But this is not the end of the challenge just yet, while I could not go faster on a CPU, I can go a lot faster on a device built for massively parallel computation: a GPU.
+Getting close to sub 100ms, but not quite there.  
+Fortunately, this is not the end of the challenge just yet, while I could not go faster on a CPU, I can go a lot faster on a device built for massively parallel computation: a GPU.
 
 ## Enter The GPU - Sub 100 Milliseconds
 
