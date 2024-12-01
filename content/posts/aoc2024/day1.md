@@ -366,8 +366,8 @@ Day1 - Part2/fast  time:   [14.881 µs 14.963 µs 15.094 µs]
 Day1 - Part2/simd  time:   [14.808 µs 14.840 µs 14.874 µs]
 ```
 
-## Final Touches
-As I was making the final touches to this post, I decided to look into the generated assembly instructions and noticed 2 things:
+## Going Into The Assembly
+As I was working on this post, I decided to look into the generated assembly instructions and noticed 2 things:
 
 1. `parse_line_fast` already does some vectorization:
 ```asm
@@ -459,7 +459,36 @@ Day1 - Part2/fast  time:   [11.945 µs 12.003 µs 12.078 µs]
 ```
 Looks like the answer is yes, its a tiny bit faster now, it is now in line with the SIMD solution.
 
-~65% of the time in part 1 is spent sorting the arrays, and a decent amount of time in part 2 is spent inside the `HashMap`, so I don't see a lot of room for further improvement.
+~65% of the time in part 1 is spent sorting the arrays, and a decent amount of time in part 2 is spent inside the `HashMap`, so there's only one thing left to do.
+
+## Arrays Are Just Very Simple Maps
+If the program is spending so much time inside the `HashMap`, maybe it's best to get rid of it.  
+The purpose of the `HashMap` is to provide a mapping from some key `K` to an index in a vector that contains the value `V`.  
+I propose that `K` IS the index.  
+Yes, `nohash` exists for effectively this purpose, but going simpler and on the stack instead of the heap can be a lot faster.  
+So behold, the new `"HashMap"`:
+```rust {hl_lines=[4,8,12]}
+pub fn part2_fast(input: &[u8]) -> u32 {
+    let mut left_col = Vec::<u32>::new();
+    // all numbers are 10000-99999
+    let mut right_col = [0u8; 90_000];
+    input.chunks(14).for_each(|line| {
+        let (l, r) = parse_line_fast(line);
+        left_col.push(l);
+        right_col[(r - 10000) as usize] += 1;
+    });
+    left_col
+        .into_iter()
+        .map(|num| num * (right_col[(num - 10000) as usize] as u32))
+        .sum()
+}
+```
+Instead of a growing map that keeps hashing a key, I simply use an array that can fit all the "keys" to begin with, all initialized to 0, and index into it.  
+And the results are impressive:  
+```
+Day1 - Part2/fast(OLD)  time:   [11.945 µs 12.003 µs 12.078 µs]
+Day1 - Part2/fast       time:   [8.0441 µs 8.0764 µs 8.1051 µs]
+```
 
 ## End of Day 1
 This is it for today, I hope I will have enough time to solve and write about the rest of the days as well, but the later days last year were difficult enough that just solving them took a long time, I'm hopeful.
