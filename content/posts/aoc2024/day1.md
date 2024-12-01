@@ -456,7 +456,7 @@ Day1 - Part2/fast  time:   [11.945 µs 12.003 µs 12.078 µs]
 ```
 Looks like the answer is yes, its a tiny bit faster now, it is now in line with the SIMD solution.
 
-~65% of the time in part 1 is spent sorting the arrays, and a decent amount of time in part 2 is spent inside the `HashMap`, so there's only one thing left to do.
+Looking at how the time is spent in the program, ~65% of the time in part 1 is spent sorting the arrays, and a decent amount of time in part 2 is spent inside the `HashMap`, so there's only one thing left to do.
 
 ## Arrays Are Just Very Simple Maps
 If the program is spending so much time inside the `HashMap`, maybe it's best to get rid of it.  
@@ -486,6 +486,7 @@ And the results are impressive:
 Day1 - Part2/fast(OLD)  time:   [11.945 µs 12.003 µs 12.078 µs]
 Day1 - Part2/fast       time:   [8.0441 µs 8.0764 µs 8.1051 µs]
 ```
+Applying the same optimizations to the SIMD solution gives effectively identical performance.
 
 ## End of Day 1
 This is it for today, I hope I will have enough time to solve and write about the rest of the days as well, but the later days last year were difficult enough that just solving them took a long time, I'm hopeful.
