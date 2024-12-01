@@ -1,6 +1,5 @@
 ---
 publishDate: 2024-12-01
-draft: true
 title: Day 1 - Historian Histeria
 author: Barr
 keywords: [Advent of Code, Rust]
