@@ -343,13 +343,13 @@ SIMD instructions can operate on multiple numbers at once, if structured correct
 The `parse_line_fast` function can utilise these SIMD instructions, but using the `portable_simd` from the standard library, requires using nightly and an unstable feature flag.
 ```rust
 fn parse_line_simd(line: &[u8]) -> (u32, u32) {
-    const WEIGHTS: u32x8 = u32x8::from_slice(&[10000u32, 1000u32, 100u32, 10u32, 1u32, 0, 0, 0]);
-    const ZERO: u32x8 = u32x8::from_slice(&[b'0' as u32; 8]);
-    let left_simd: u32x8 = u8x8::load_or_default(&line[..5]).cast();
-    let right_simd: u32x8 = u8x8::load_or_default(&line[8..13]).cast();
+    const WEIGHTS: u32x4 = u32x4::from_slice(&[10000u32, 1000u32, 100u32, 10u32]);
+    const ZERO: u32x4 = u32x4::from_slice(&[b'0' as u32; 4]);
+    let left_simd: u32x4 = u8x4::load_or_default(&line[..4]).cast();
+    let right_simd: u32x4 = u8x4::load_or_default(&line[8..12]).cast();
     (
-        ((left_simd - ZERO) * WEIGHTS).reduce_sum(),
-        ((right_simd - ZERO) * WEIGHTS).reduce_sum(),
+        ((left_simd - ZERO) * WEIGHTS).reduce_sum() + (line[4] - b'0') as u32,
+        ((right_simd - ZERO) * WEIGHTS).reduce_sum() + (line[12] - b'0') as u32,
     )
 }
 ```
