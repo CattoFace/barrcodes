@@ -7,6 +7,7 @@ description: A simple introduction challange.
 summary: |
   Another year, another set of challanges from [Advent of Code](https://adventofcode.com/), and once again I will attempt to solve them all using Rust.  
   But this year, I will attempt to document my solutions on this blog.
+github: https://github.com/CattoFace/aoc2024/blob/main/src/day1.rs
 ---
 
 ## Part 1
