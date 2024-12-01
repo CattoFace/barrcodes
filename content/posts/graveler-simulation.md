@@ -117,7 +117,10 @@ panic = "abort" # abort on panic instead of unwind, removes unwinding codepaths
 codegen-units = 1 # do not split into "code generation units", a little faster code at the cost of parallel codegen
 lto = true # enable "Fat" Link-Time-Optimization, allows optimization to work across linked source files
 ```
-and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions.[^1]
+and use the `RUSTFLAGS='-C target-cpu=native` environment variable, which allows to compiler to target *my* CPU, instead of a generic one that doesn't have all the modern CPU extensions.
+
+> [!WARNING]
+> Generally, `native` is not recommended when publishing the output because the resulting executable is only guaranteed to be able to run on a CPU that has at least every extension available on the CPU used to compile. Targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` at all.
 
 ### Faster Random Number Generation
 Generating random numbers can take a while, depending on the algorithm used, every algorithm targets different things: performance, security, statistical accuracy, etc.  
@@ -538,4 +541,3 @@ Sometimes the best optimization is just throwing more money at the problem.
 Optimizing code is a lot of fun, and I'm pretty satisfied with the results I achieved and the things I learned.  
 The final version of the solutions is available on my [GitHub](https://github.com/CattoFace/graveler-sim) (the CUDA code is in the cuda directory)
 
-[^1]:Generally, `native` is not recommended when publishing the output because the resulting executable is only guaranteed to be able to run on a CPU that has at least every extension available on the CPU used to compile. Targeting [x86-64-v2/3/4](https://en.wikipedia.org/wiki/X86-64#Microarchitecturelevels) is more universal, if going beyond the default `generic` at all.

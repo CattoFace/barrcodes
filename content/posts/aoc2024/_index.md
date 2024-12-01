@@ -1,5 +1,5 @@
 ---
-date: 2024-12-01
+publishDate: 2024-12-01
 title: Advent Of Code 2024
 author: Barr
 keywords: [aoc2024, Advent Of Code, Rust]
