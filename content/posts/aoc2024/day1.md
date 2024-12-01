@@ -313,7 +313,7 @@ And 2:
 // parsing the input optimised for the real input shape
 #[aoc(day1, part2, fast)]
 pub fn part2_fast(input: &[u8]) -> u32 {
-    let mut left_col = Vec::<u32>::new();
+    let mut left_col = Vec::<u32>::with_capacity(1000);
     // value type shrunk to u8 because in the real input no value repeats a huge amount of times
     let mut right_col =
         fxhash::FxHashMap::<u32, u8>::with_capacity_and_hasher(1000, Default::default());
@@ -469,7 +469,7 @@ Yes, `nohash` exists for effectively this purpose, but going simpler and on the 
 So behold, the new `"HashMap"`:
 ```rust {hl_lines=[4,8,12]}
 pub fn part2_fast(input: &[u8]) -> u32 {
-    let mut left_col = Vec::<u32>::new();
+    let mut left_col = Vec::<u32>::with_capacity(1000);
     // all numbers are 10000-99999
     let mut right_col = [0u8; 90_000];
     input.chunks(14).for_each(|line| {
