@@ -143,7 +143,7 @@ pub fn part1(mut input: &[u8]) -> u32 {
         let (right_num, remainder) = fast_parse(&remainder[3..]);
         left_col.push(left_num);
         right_col.push(right_num);
-        if remainder.is_empty() {
+        if remainder.len() <= 1 {
             break;
         }
         input = &remainder[1..];
@@ -151,13 +151,20 @@ pub fn part1(mut input: &[u8]) -> u32 {
     part1_solve(left_col, right_col)
 }
 ```
-Almost every line in this parser is different, so I'll break it down:  
-The main idea of this solution is that every byte parsed should "consume" it from the slice, I achieve this by reassigning the slice without the parsed bytes.
+The main idea of this solution is that every byte parsed should "consume" it from the slice, I achieve this by reassigning the slice without the parsed bytes.  
+Almost every line in this parser is different, so I'll break it down section by section:  
 ```rust
 loop {
+  ...
+  if remainder.len() <= 1 {
+      break;
+  }
+  ...
+}
 ```
-This parser stops when the branch inside the body reaches an empty slice, the loop body will shrink the slice as it parses it.  
-This check can't be at the start of the iteration as a `while` condition because the last line does not have  a line-break.
+This parser stops when the branch inside the loop body reaches the last line with 1 byte remaining.  
+This check can't be at the start of the iteration as a `while` condition because the last line does not have a line-break.  
+The loop body will shrink the slice as it parses it.  
 ```rust
 let (left_num, remainder) = fast_parse(input);
 let (right_num, remainder) = fast_parse(&remainder[3..]);
@@ -212,7 +219,7 @@ pub fn part2(mut input: &[u8]) -> u32 {
             .entry(right_num)
             .and_modify(|r| *r += 1)
             .or_insert(1);
-        if remainder.is_empty() {
+        if remainder.len() <= 1 {
             break;
         }
         input = &remainder[1..];
