@@ -269,7 +269,7 @@ pub fn part1_nom(input: &[u8]) -> u32 {
 ```
 Effectively what the parser does is:
 Iterate over the text, consuming `seperated_pair`s of 2 `u32`s separated by 3 spaces every time, and each pair is separated from the next using an optional line break.
-`debug_asser!` is only there to help the compiler understand the correct types for `it`, I could not find an easier way to get this code to compile.
+`debug_assert!` is only there to help the compiler understand the correct types for `it`, I could not find an easier way to get this code to compile.
 And the results:
 ```
 Day1 - Part1/nom  time:   [31.367 µs 31.411 µs 31.457 µs]
@@ -314,8 +314,9 @@ And 2:
 #[aoc(day1, part2, fast)]
 pub fn part2_fast(input: &[u8]) -> u32 {
     let mut left_col = Vec::<u32>::new();
+    // value type shrunk to u8 because in the real input no value repeats a huge amount of times
     let mut right_col =
-        fxhash::FxHashMap::<u32, u16>::with_capacity_and_hasher(1000, Default::default());
+        fxhash::FxHashMap::<u32, u8>::with_capacity_and_hasher(1000, Default::default());
     input.chunks(14).for_each(|line| {
         let (l, r) = parse_line_fast(line);
         left_col.push(l);
