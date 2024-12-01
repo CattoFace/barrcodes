@@ -46,10 +46,7 @@ After parsing all that's left is to iterate over both columns.
 fn part1_solve(mut left: Vec<u32>, mut right: Vec<u32>) -> u32 {
     left.sort_unstable();
     right.sort_unstable();
-    left.iter()
-        .zip(right)
-        .map(|(&l, r)| (l as i32 - r as i32).abs())
-        .sum::<i32>() as u32
+    left.iter().zip(right).map(|(&l, r)| l.abs_diff(r)).sum()
 }
 #[aoc(day1, part1, naive)]
 pub fn part1_naive(input: &str) -> u32 {
