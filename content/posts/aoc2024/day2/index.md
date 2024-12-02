@@ -45,7 +45,7 @@ Running this solution gives the correct answer and it's time for part 2
 In part 2, the same input is given but now 1 number is allowed to be removed from each line to meet the criteria.  
 Do note this is optional, if the line was valid in part 1, it is also valid in part 2.  
 
-So the first step for each line is the same full line check from part 1, and the "mistakes" should be handled.
+So the first step for each line is the same full line check from part 1, and if that does not work, a new method that allows 1 mistake should be used.  
 After a little thinking, I decided to split the numbers into 3 sections that need to be checked:
 
 1. All numbers before the removed number.
