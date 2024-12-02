@@ -346,7 +346,7 @@ Day2 - Part2/single_pass time:   [43.260 µs 43.665 µs 44.226 µs]
 ### Final Touches - ArrayVec
 Vector performance can often be improved by using an array on the stack, but using a basic array like that is cumbersome, fortunately, the `tinyvec` crate(and a couple other similar ones) offer vector-like structures that can be stored on the stack, and optionally, spill into the heap when the statically set size is exceeded.  
 `ArrayVec` is a struct that never spills into the heap, it just panics when the capacity is exceeded, and that is fine in this case, it simply needs to be big enough for the longest line in the input(and maybe a little longer just in case).  
-The only changes required is adding `tinyvec` to the project, and replacing `Vec`s in function signatures and variable creation:
+The only changes required are adding `tinyvec` to the project, and replacing `Vec`s in function signatures and variable creation:
 ```rust
 let mut buffer = array_vec!([u8; 8]);
 ```
