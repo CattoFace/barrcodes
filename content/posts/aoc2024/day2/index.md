@@ -343,11 +343,20 @@ Day2 - Part2/opt         time:   [47.190 µs 47.990 µs 48.785 µs]
 Day2 - Part2/single_pass time:   [43.260 µs 43.665 µs 44.226 µs]
 ```
 
-## End of Day 2
-Another day done, I think the performance and the code readability could be a little better but I'll stop there.  
-The final times I achieved:
+### Final Touches - ArrayVec
+Vector performance can often be improved by using an array on the stack, but using a basic array like that is cumbersome, fortunately, the `tinyvec` crate(and a couple other similar ones) offer vector-like structures that can be stored on the stack, and optionally, spill into the heap when the statically set size is exceeded.  
+`ArrayVec` is a struct that never spills into the heap, it just panics when the capacity is exceeded, and that is fine in this case, it simply needs to be big enough for the longest line in the input(and maybe a little longer just in case).  
+The only changes required is adding `tinyvec` to the project, and replacing `Vec`s in function signatures and variable creation:
+```rust
+let mut buffer = array_vec!([u8; 8]);
 ```
-Day2 - Part1/no_vec     time:   [18.076 µs 18.178 µs 18.290 µs]
-Day2 - Part2/single_pass time:   [43.260 µs 43.665 µs 44.226 µs]
+I applied it to all vectors in all solutions, but I'll only show the result for the final versions:
+```
+Day2 - Part1/no_vec      time:   [18.310 µs 18.373 µs 18.440 µs]
+Day2 - Part2/single_pass time:   [40.617 µs 40.961 µs 41.281 µs]
+```
+part 1 didn't seem to improve, but part 2 improved by a few microseconds.
 
+## End of Day 2
+Another day done, I think the performance and the code readability could be a little better but I'll stop there.
 ```
