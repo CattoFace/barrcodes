@@ -226,7 +226,7 @@ Now it's time to optimize part 2:
 
 ## Rewriting Part 2
 
-This algorithm was inspired by someone else's solution.
+This algorithm is very different from the original one.  
 This time I am parsing `mul` instructions in chunks between `do()` and `don't()` instructions, the general steps are:
 
 - Find the next `don't()`
