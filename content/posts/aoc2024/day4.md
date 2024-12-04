@@ -16,7 +16,7 @@ fn find_surrounding_mas(input: &[u8], i: usize, line_len: usize) -> u32 {
     // LEFT
     (i>=3 && &input[i-3..i]==b"SAM") as u32+
     // RIGHT
-    (i<=input.len()-3 && &input[i+1..i+4]==b"MAS") as u32+
+    (i<=input.len()-4 && &input[i+1..i+4]==b"MAS") as u32+
     // UP
     (i>=3*line_len
         && input[i-3*line_len] == b'S'
@@ -60,7 +60,7 @@ I'm just looking all the `X`s in the input(using `memchr` which I introduced [ye
 
 The only issues I had was bounds checking mistakes, I first tried fixing them with checked `input.get()`, but the index could underflow anyway, so I didn't use it.
 
-This solution solves part 1 and its time for part 2.
+This solution solves part 1 and now it's time for part 2.
 
 ## Part 2
 Of course, the instructions given in part 1 were wrong, this is not an `XMAS` search, it's an `X-MAS` search, meaning I need to find X patterns of the word `MAS`, for example:
