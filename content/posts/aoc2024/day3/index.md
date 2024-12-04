@@ -89,8 +89,8 @@ pub fn part1_naive(mut input: &[u8]) -> u32 {
 
 And this runs a lot faster...
 ```
-Day3 - Part1/backwards  time:   [20.251 µs 20.456 µs 20.691 µs]
-Day3 - Part1/naive      time:   [14.271 µs 14.324 µs 14.397 µs]
+Day3 - Part1/backwards  time:   [23.422 µs 23.547 µs 23.699 µs]
+Day3 - Part1/naive      time:   [16.659 µs 16.829 µs 17.000 µs]
 ```
 I'll get to optimize this further after part 2
 
@@ -176,7 +176,7 @@ Each mode has its own skip distance for the shortest possible instruction, and `
 
 The time for this solution is:
 ```
-Day3 - Part2/backwards  time:   [22.076 µs 22.204 µs 22.420 µs]
+Day3 - Part2/backwards  time:   [21.745 µs 21.805 µs 21.888 µs]
 ```
 
 I didn't write a naive solution for part 2, instead I rewrote it using optimizations from part 1 at the end.
@@ -218,8 +218,8 @@ I separated most of the code to a new function because I want to use it for the 
 
 This version is a little faster:
 ```
-Day3 - Part1/naive      time:   [14.271 µs 14.324 µs 14.397 µs]
-Day3 - Part1/memchr     time:   [13.470 µs 13.500 µs 13.532 µs]
+Day3 - Part1/naive      time:   [16.659 µs 16.829 µs 17.000 µs]
+Day3 - Part1/memchr     time:   [13.697 µs 13.743 µs 13.789 µs]
 ```
 
 Now it's time to optimize part 2:
@@ -264,8 +264,8 @@ pub fn part2_memchr(mut input: &[u8]) -> u32 {
 
 This algorithm does read every byte in the `do` sections twice, but turns out it's worth it:
 ```
-Day3 - Part2/backwards  time:   [22.076 µs 22.204 µs 22.420 µs]
-Day3 - Part2/memchr     time:   [11.629 µs 11.642 µs 11.661 µs]
+Day3 - Part2/backwards  time:   [21.745 µs 21.805 µs 21.888 µs]
+Day3 - Part2/memchr     time:   [8.4004 µs 8.4154 µs 8.4331 µs]
 ```
 This is a lot faster than even the fastest part 1 solution!
 
@@ -275,30 +275,33 @@ I wrote a new implementation for parsing specifically `u16` that are up to 3 dig
 ```rust
 fn fast_parse(input: &[u8]) -> (u16, &[u8]) {
     match input.first() {
-        None => (0, input),
-        Some(&i) => {
-            let i = i as u16;
+        Some(&i) if i.is_ascii_digit() => {
+            let i = (i - b'0') as u16;
             match input.get(1) {
-                None => (i, &input[1..]),
-                Some(&j) => {
-                    let j = j as u16;
+                Some(&j) if j.is_ascii_digit() => {
+                    let j = (j - b'0') as u16;
                     match input.get(2) {
-                        None => (i * 10 + j, &input[2..]),
-                        Some(&k) => (i * 100 + j * 10 + k as u16, &input[3..]),
+                        Some(&k) if k.is_ascii_digit() => {
+                            (i * 100 + j * 10 + (k - b'0') as u16, &input[3..])
+                        }
+                        _ => (i * 10 + j, &input[2..]),
                     }
                 }
+                _ => (i, &input[1..]),
             }
         }
+        _ => (0, input),
     }
 }
+
 ```
-This parser is considerably faster:
+This parser is faster:
 ```
 Day3 - Part1/memchr(OLD) time:   [13.470 µs 13.500 µs 13.532 µs]
-Day3 - Part1/memchr      time:   [9.9806 µs 9.9937 µs 10.007 µs]
+Day3 - Part1/memchr      time:   [12.457 µs 12.485 µs 12.529 µs]
 
 Day3 - Part2/memchr(OLD) time:   [11.629 µs 11.642 µs 11.661 µs]
-Day3 - Part2/memchr      time:   [5.4157 µs 5.4258 µs 5.4383 µs]
+Day3 - Part2/memchr      time:   [7.3813 µs 7.3926 µs 7.4040 µs]
 ```
 And those are my final times for the day.
 
