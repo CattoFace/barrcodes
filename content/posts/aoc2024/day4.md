@@ -117,6 +117,42 @@ Turns out its slower...
 
 I also tried replacing all the indexing inside `find_surrounding_mas` with unsafe `get_unchecked` but it was also slower (~86us).
 
+## Multithreading For The Win?
+As a last resort, I tried going multithreaded.  
+Using a simple rayon `iter_bridge` gave an 8x slowdown, not good.  
+Using standard threads and chunking the input properly was not as bad:
+```rust
+#[aoc(day4, part1, mt)]
+pub fn part1_mt(input: &[u8]) -> u32 {
+    const THREAD_COUNT: usize = 2usize;
+    let line_len = memchr::memchr(b'\n', input).unwrap() + 1;
+    let chunk_size = input.len() / THREAD_COUNT;
+    thread::scope(|s| {
+        let threads: Vec<ScopedJoinHandle<u32>> = (0..THREAD_COUNT)
+            .map(|tid| s.spawn(move || part1_chunk(input, line_len, tid, chunk_size)))
+            .collect();
+        let local_res = memchr::memchr_iter(b'X', &input[THREAD_COUNT * chunk_size..])
+            .map(|i| find_surrounding_mas(input, i + THREAD_COUNT * chunk_size, line_len))
+            .sum::<u32>();
+        local_res + threads.into_iter().map(|t| t.join().unwrap()).sum::<u32>()
+    })
+}
+fn part1_chunk(input: &[u8], line_len: usize, tid: usize, chunk_size: usize) -> u32 {
+    memchr::memchr_iter(b'X', &input[tid * chunk_size..(tid + 1) * chunk_size])
+        .map(|i| find_surrounding_mas(input, i + tid * chunk_size, line_len))
+        .sum::<u32>()
+}
+```
+But also not great:
+
+| threads | time  |
+| ------- | ----- |
+| 2       | 80us  |
+| 4       | 85us  |
+| 6       | 100us |
+
+This is not it either, I'll stick to the multithreaded solution.
+
 ## End of Day 4
 I guess this is it for the day, I could not think of many optimizations and the ones I did try did not work.
 
