@@ -82,10 +82,8 @@ fn is_x(input: &[u8], i: usize, line_len: usize) -> bool {
 }
 pub fn part2(input: &[u8]) -> u32 {
     let line_len = memchr::memchr(b'\n', input).unwrap() + 1;
-    // no point searching in the first and last line
-    // there's also no point searching the first and last column but that's not worth the effort to skip
-    memchr::memchr_iter(b'A', &input[line_len..input.len() - line_len])
-        .filter(|&i| is_x(input, i + line_len, line_len))
+    memchr::memchr_iter(b'A', input)
+        .filter(|&i| is_x(input, i, line_len))
         .count() as u32
 }
 ```
@@ -95,7 +93,7 @@ Find all the `A`s, check their surroundings, and part 2 is done.
 The initial times:
 ```
 Day4 - Part1/naive time:   [79.028 µs 79.312 µs 79.645 µs]
-Day4 - Part2/naive time:   [61.799 µs 61.944 µs 62.133 µs]
+Day4 - Part2/naive time:   [57.325 µs 57.440 µs 57.577 µs]
 ```
 
 The only optimization I can think of is using `memchr::memmem` to replace the right and left checks:
@@ -117,7 +115,7 @@ Turns out its slower...
 
 I also tried replacing all the indexing inside `find_surrounding_mas` with unsafe `get_unchecked` but it was also slower (~86us).
 
-## Multithreading For The Win?
+### Multithreading For The Win?
 As a last resort, I tried going multithreaded.  
 Using a simple rayon `iter_bridge` gave an 8x slowdown, not good.  
 Using standard threads and chunking the input properly was not as bad:
@@ -153,6 +151,53 @@ But also not great:
 
 This is not it either, I'll stick to the multithreaded solution.
 
+## Optimizing Part 2
+While I could not improve part 1, I have a couple ideas for part 2:
+I can search for the `A` only in the middle lines(not first or last), since in the outer lines there can't possibly the required X shape around it, and the same for the outer columns.
+```rust {hl_lines=[4,5]}
+pub fn part2_opt(input: &[u8]) -> u32 {
+    let line_len = memchr::memchr(b'\n', input).unwrap() + 1;
+    // no point searching in the first and last line and column and helps with bounds checking
+    memchr::memchr_iter(b'A', &input[line_len..input.len() - line_len])
+        .filter(|&i| is_x(input, i + line_len, line_len))
+        .count() as u32
+}
+fn is_x(input: &[u8], i: usize, line_len: usize) -> bool {
+    let column = i % line_len;
+    if column == 0 || column == line_len - 1 {
+        return false;
+    }
+    // UPLEFT+DOWNRIGHT
+    ((input.get(i - line_len - 1) == Some(&b'M') && input.get(i + line_len + 1) == Some(&b'S'))
+        || (input.get(i - line_len - 1) == Some(&b'S') && input.get(i + line_len + 1) == Some(&b'M'))) &&
+    // DOWNLEFT+UPRIGHT
+    ((input.get(i + line_len - 1) == Some(&b'M') && input.get(i - line_len + 1) == Some(&b'S'))
+        || (input.get(i + line_len - 1) == Some(&b'S') && input.get(i - line_len + 1) == Some(&b'M')))
+}
+```
+But it's slower..
+```
+Day4 - Part2/naive      time:   [57.325 µs 57.440 µs 57.577 µs]
+Day4 - Part2/opt        time:   [63.710 µs 63.891 µs 64.066 µs]
+```
+What I didn't do yet, is utilise this knowledge that the X is always in the center area - the `get()` methods will never go out of bounds, this means that can be replaced by normal indexing, and more than that, since I know it will never go out of bounds and the compiler doesn't, I can replace it with unsafe `get_unchecked()`.  
+```
+Day4 - Part2/opt        time:   [55.863 µs 55.969 µs 56.093 µs]
+```
+A little better.  
+One final attempt:  
+Instead of checking both the `M` and the `S` in both directions forwards and backwards, it is possible to check if the sum matches `M+S` in both diagonals:
+```rust
+// UPLEFT+DOWNRIGHT
+(input.get_unchecked(i - line_len - 1)+input.get_unchecked(i + line_len + 1) == (b'S'+b'M')) &&
+// DOWNLEFT+UPRIGHT
+(input.get_unchecked(i + line_len - 1) + input.get_unchecked(i - line_len + 1) == (b'S'+b'M'))
+```
+```
+Day4 - Part2/opt        time:   [51.502 µs 52.007 µs 52.690 µs]
+```
+And even faster than before.
+
 ## End of Day 4
-I guess this is it for the day, I could not think of many optimizations and the ones I did try did not work.
+I guess this is it for the day, I could not improve part 1 at all, but at least I improved part 2 a little.
 
