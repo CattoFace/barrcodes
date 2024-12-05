@@ -243,7 +243,7 @@ Day5 - Part1/rewrite      time:   [26.750 µs 26.782 µs 26.815 µs]
 The same change can't be applied to the vector solution as at least one of either the `rules` or `seen` has to be indexable to find a specific number, otherwise it will be back to a nested iteration again.
 
 ## Part 2 Optimizations
-I originally applied the same type change from part 1 and it did improve the performance, and I also rewritten `line_fix` to use the normal `rules` and not the reverse version, but after rewriting part 1 I tried the same with part 2 and got even better results:
+I originally applied the same type change from part 1 and it did improve the performance, and I also rewritten `line_fix` to use the normal `rules` and not the reverse version, but after rewriting part 1 I tried the same with part 2 and got even better results, this solution sorts of builds the line from back to front, looking for numbers that can be added to the end of the line without breaking any rules:
 ```rust
 fn line_fix(line: &[u8], rules: &[[bool; 100]; 100]) -> u8 {
     let number_count = line.len() / 3;
