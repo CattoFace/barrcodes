@@ -349,9 +349,79 @@ This final version runs at:
 ```
 Day5 - Part2/single_parse time:   [109.80 µs 109.94 µs 110.09 µs]
 ```
+
+I then tried to apply the same structure to part 1:
+```rust
+#[aoc(day5, part1, rewrite2)]
+pub fn part1_rewrite2(input: &[u8]) -> u32 {
+    let mut sum = 0u32;
+    let (rules, mut remainder) = parse_rules(input);
+    let mut numbers: ArrayVec<[u8; 64]> = ArrayVec::new();
+    loop {
+        match remainder.get(2) {
+            Some(b',') => numbers.push((remainder[0] - b'0') * 10 + remainder[1] - b'0'),
+            Some(b'\n') => {
+                numbers.push((remainder[0] - b'0') * 10 + remainder[1] - b'0');
+                if line_predicate2(&numbers, &rules) {
+                    sum += numbers[numbers.len() / 2] as u32;
+                }
+                numbers.clear();
+            }
+            None => {
+                numbers.push((remainder[0] - b'0') * 10 + remainder[1] - b'0');
+                if line_predicate2(&numbers, &rules) {
+                    sum += numbers[numbers.len() / 2] as u32;
+                }
+                return sum;
+            }
+            _ => unreachable!(),
+        }
+        remainder = &remainder[3..];
+    }
+}
+```
+And surprisingly, its faster despite collecting the numbers:
+```
+Day5 - Part1/rewrite    time:   [26.261 µs 26.372 µs 26.519 µs]
+Day5 - Part1/rewrite2   time:   [20.490 µs 20.509 µs 20.525 µs]
+```
+## Sorting
+One idea I had early on and didn't try yet was sorting the numbers using standard sorting methods, I just need to implement an order function, shouldn't be hard.  
+The new `line_predicate_sort` is a one liner:
+```rust
+fn line_predicate_sort(numbers: &[u8], rules: &[[bool; 100]; 100]) -> bool {
+    numbers.is_sorted_by(|&x, &y| rules[x as usize][y as usize])
+}
+```
+And the actual part one code is just using it instead of `line_predicate2`.
+```
+Day5 - Part1/sort       time:   [10.624 µs 10.641 µs 10.660 µs]
+```
+Wow, so fast.
+
+Shouldn't be hard to apply to part 2 as well, just sorting it using the same compare function.  
+The part 2 function looks the same except its using the new functions, and the new `line_fix_sort` is a little longer than `line_predicate_sort`:
+```rust
+fn line_fix_sort(mut numbers: ArrayVec<[u8; 64]>, rules: &[[bool; 100]; 100]) -> u8 {
+    numbers.sort_unstable_by(|&x, &y| {
+        if rules[x as usize][y as usize] {
+            Ordering::Less
+        } else {
+            Ordering::Equal
+        }
+    });
+    numbers[numbers.len() / 2]
+}
+```
+I was a little worried when it warned me I should be implementing total order but it looks like the input is constrained enough to not cause an issue and the answer is still correct, and *very* fast:
+```
+Day5 - Part2/single_parse time:   [108.06 µs 108.24 µs 108.52 µs]
+Day5 - Part2/sort         time:   [22.546 µs 22.576 µs 22.611 µs]
+```
+
 ## Final Times
 Unlocking the CPUs clock and trying to to hit a thermal throttle, the final times are:
 ```
-Day5 - Part1/rewrite      time:   [16.774 µs 16.804 µs 16.843 µs]
-Day5 - Part2/single_parse time:   [69.218 µs 69.280 µs 69.347 µs]
+Day5 - Part1/sort       time:   [7.0558 µs 7.0602 µs 7.0646 µs]
+Day5 - Part2/sort       time:   [13.943 µs 13.966 µs 13.987 µs]
 ```
