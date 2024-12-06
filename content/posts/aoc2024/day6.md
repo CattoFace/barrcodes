@@ -152,7 +152,7 @@ fn check_loop(
 
 Part 2 is also fairly similar to part 1, but I had a couple mistakes that made me stare at the code for a while.  
 Since it worked on the example and not the real input, it was very hard to debug.  
-I even considered that cases where an obstacle can create a loop from multiple directions, but should only count once.  
+I even considered the cases where an obstacle can create a loop from multiple directions, but should only count once.  
 So here's a challenge to the reader, find the 2 logic bugs in this code(assume `check_loop` works correctly, which it does):
 ```rust
 #[aoc(day6, part2, first)]
