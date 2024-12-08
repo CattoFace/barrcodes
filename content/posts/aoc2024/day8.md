@@ -259,8 +259,8 @@ Day8 - Part2/grid_par   time:   [39.823 µs 40.206 µs 40.650 µs]
 ```
 Everything got slower, not very useful.
 
-### A Small Rewrite
-After finishing the last section, I decided to change `part1_grid` a little:
+### A Rewrite
+After finishing the last section, I decided started to rewrite a bunch of sections inside both `grid` solutions, and benchmarking each change until I got to these fastest versions:
 ```rust
 #[aoc(day8, part1, grid)]
 pub fn part1_grid(input: &[u8]) -> u32 {
@@ -268,42 +268,36 @@ pub fn part1_grid(input: &[u8]) -> u32 {
     let mut count = 0u32;
     let (antennas, width, height) = find_antennas(input);
     antennas.iter().for_each(|freq| {
-        freq.iter()
-            .tuple_combinations()
-            .for_each(|(&antenna1, &antenna2)| {
+        if freq.len() <= 1 {
+            return;
+        }
+        for (i, &antenna1) in freq[..freq.len() - 1].iter().enumerate() {
+            for &antenna2 in &freq[i + 1..] {
                 let [antinode1, antinode2] = antenna1.resonate(antenna2);
-                if antinode1.x >= 0
-                    && antinode1.x < width
-                    && antinode1.y >= 0
-                    && antinode1.y < height
-                {
+                // because of scanning order, antinode1 ,will always be above anteanna1
+                if antinode1.x >= 0 && antinode1.x < width && antinode1.y >= 0 {
                     let index = antinode1.y as usize * width as usize + antinode1.x as usize;
-                    if !grid[index] {
-                        grid.set(index, true);
-                        count += 1;
-                    }
+                    let mut cell = grid.get_mut(index).unwrap();
+                    count += !*cell as u32;
+                    *cell = true;
                 }
-                if antinode2.x >= 0
-                    && antinode2.x < width
-                    && antinode2.y >= 0
-                    && antinode2.y < height
-                {
+                // because of scanning order, antinode2 will always be below antenna1
+                if antinode2.x >= 0 && antinode2.x < width && antinode2.y < height {
                     let index = antinode2.y as usize * width as usize + antinode2.x as usize;
-                    if !grid[index] {
-                        grid.set(index, true);
-                        count += 1;
-                    }
+                    let mut cell = grid.get_mut(index).unwrap();
+                    count += !*cell as u32;
+                    *cell = true;
                 }
-            })
+            }
+        }
     });
     count
 }
+
 ```
-Which helped performance a little:
 ```
-Day8 - Part1/grid       time:   [6.4538 µs 6.4609 µs 6.4694 µs]
+Day8 - Part1/grid       time:   [5.3386 µs 5.3489 µs 5.3596 µs]
 ```
-So I did the same with part 2:
 ```rust
 #[aoc(day8, part2, grid)]
 pub fn part2_grid(input: &[u8]) -> u32 {
@@ -311,44 +305,58 @@ pub fn part2_grid(input: &[u8]) -> u32 {
     let mut count = 0u32;
     let (antennas, width, height) = find_antennas(input);
     antennas.iter().for_each(|freq| {
-        freq.iter().for_each(|p| {
-            grid.set(p.get_index(width), true);
-        });
-        count += freq.len() as u32;
-    });
-    antennas.iter().for_each(|freq| {
-        freq.iter()
-            .tuple_combinations()
-            .for_each(|(antenna1, antenna2)| {
-                let (res1, res2) = antenna1.infinite_resonation(*antenna2);
-                res1.take_while(|&p| p.x >= 0 && p.x < width && p.y >= 0 && p.y < height)
-                    .for_each(|p| {
-                        let index = p.get_index(width);
-                        if !grid[index] {
-                            grid.set(p.get_index(width), true);
-                            count += 1;
-                        }
-                    });
-                res2.take_while(|&p| p.x >= 0 && p.x < width && p.y >= 0 && p.y < height)
-                    .for_each(|p| {
-                        let index = p.get_index(width);
-                        if !grid[index] {
-                            grid.set(p.get_index(width), true);
-                            count += 1;
-                        }
-                    });
-            })
+        if freq.len() <= 1 {
+            return;
+        }
+        for (i, &antenna1) in freq[..freq.len() - 1].iter().enumerate() {
+            let mut cell = grid.get_mut(antenna1.get_index(width)).unwrap();
+            count += !*cell as u32;
+            *cell = true;
+            drop(cell);
+            for &antenna2 in &freq[i + 1..] {
+                let x_diff = antenna1.x - antenna2.x;
+                let y_diff = antenna1.y - antenna2.y;
+                let mut antinode = Position {
+                    x: antenna1.x + x_diff,
+                    y: antenna1.y + y_diff,
+                };
+                while antinode.x >= 0 && antinode.x < width && antinode.y >= 0 {
+                    let mut cell = grid.get_mut(antinode.get_index(width)).unwrap();
+                    count += !*cell as u32;
+                    *cell = true;
+                    antinode.x += x_diff;
+                    antinode.y += y_diff;
+                }
+                let mut antinode = Position {
+                    x: antenna2.x - x_diff,
+                    y: antenna2.y - y_diff,
+                };
+                while antinode.x >= 0 && antinode.x < width && antinode.y < height {
+                    let mut cell = grid.get_mut(antinode.get_index(width)).unwrap();
+                    count += !*cell as u32;
+                    *cell = true;
+                    antinode.x -= x_diff;
+                    antinode.y -= y_diff;
+                }
+            }
+        }
+        // handle last antenna since outer loop doesn't
+        let mut cell = grid.get_mut(freq[freq.len() - 1].get_index(width)).unwrap();
+        count += !*cell as u32;
+        *cell = true;
     });
     count
 }
+
 ```
-And got this time:
 ```
-Day8 - Part2/grid       time:   [14.681 µs 14.699 µs 14.719 µs]
+Day8 - Part2/grid       time:   [7.9423 µs 7.9590 µs 7.9768 µs]
 ```
+Turns out some iterators, especially `flat_map`, can make things a lot slower than simple loops.
+
 ## Final Times
 Unlocking the CPU clock I get these final times:
 ```
-Day8 - Part1/grid       time:   [4.1539 µs 4.1578 µs 4.1626 µs]
-Day8 - Part2/grid       time:   [8.4486 µs 8.4745 µs 8.5064 µs]
+Day8 - Part1/grid       time:   [3.8848 µs 3.8932 µs 3.9029 µs]
+Day8 - Part2/grid       time:   [6.5533 µs 6.5646 µs 6.5758 µs]
 ```
