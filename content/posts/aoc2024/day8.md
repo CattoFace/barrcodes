@@ -257,11 +257,11 @@ Day8 - Part1/grid_par   time:   [28.888 µs 29.356 µs 29.981 µs]
 Day8 - Part2/unique_par time:   [139.11 µs 140.84 µs 142.53 µs]
 Day8 - Part2/grid_par   time:   [39.823 µs 40.206 µs 40.650 µs]
 ```
-`unique` got faster, `grid` got slower, not very useful.
+Everything got slower, not very useful.
 
 ### A Small Rewrite
 After finishing the last section, I decided to change `part1_grid` a little:
-```rust {hl_lines=["9-33"]}
+```rust
 #[aoc(day8, part1, grid)]
 pub fn part1_grid(input: &[u8]) -> u32 {
     let mut grid = bitvec![0;input.len()];
