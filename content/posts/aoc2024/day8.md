@@ -259,9 +259,96 @@ Day8 - Part2/grid_par   time:   [39.823 µs 40.206 µs 40.650 µs]
 ```
 `unique` got faster, `grid` got slower, not very useful.
 
+### A Small Rewrite
+After finishing the last section, I decided to change `part1_grid` a little:
+```rust {hl_lines=["9-33"]}
+#[aoc(day8, part1, grid)]
+pub fn part1_grid(input: &[u8]) -> u32 {
+    let mut grid = bitvec![0;input.len()];
+    let mut count = 0u32;
+    let (antennas, width, height) = find_antennas(input);
+    antennas.iter().for_each(|freq| {
+        freq.iter()
+            .tuple_combinations()
+            .for_each(|(&antenna1, &antenna2)| {
+                let [antinode1, antinode2] = antenna1.resonate(antenna2);
+                if antinode1.x >= 0
+                    && antinode1.x < width
+                    && antinode1.y >= 0
+                    && antinode1.y < height
+                {
+                    let index = antinode1.y as usize * width as usize + antinode1.x as usize;
+                    if !grid[index] {
+                        grid.set(index, true);
+                        count += 1;
+                    }
+                }
+                if antinode2.x >= 0
+                    && antinode2.x < width
+                    && antinode2.y >= 0
+                    && antinode2.y < height
+                {
+                    let index = antinode2.y as usize * width as usize + antinode2.x as usize;
+                    if !grid[index] {
+                        grid.set(index, true);
+                        count += 1;
+                    }
+                }
+            })
+    });
+    count
+}
+```
+Which helped performance a little:
+```
+Day8 - Part1/grid       time:   [6.4538 µs 6.4609 µs 6.4694 µs]
+```
+So I did the same with part 2:
+```rust
+#[aoc(day8, part2, grid)]
+pub fn part2_grid(input: &[u8]) -> u32 {
+    let mut grid: BitVec = bitvec![0;input.len()];
+    let mut count = 0u32;
+    let (antennas, width, height) = find_antennas(input);
+    antennas.iter().for_each(|freq| {
+        freq.iter().for_each(|p| {
+            grid.set(p.get_index(width), true);
+        });
+        count += freq.len() as u32;
+    });
+    antennas.iter().for_each(|freq| {
+        freq.iter()
+            .tuple_combinations()
+            .for_each(|(antenna1, antenna2)| {
+                let (res1, res2) = antenna1.infinite_resonation(*antenna2);
+                res1.take_while(|&p| p.x >= 0 && p.x < width && p.y >= 0 && p.y < height)
+                    .for_each(|p| {
+                        let index = p.get_index(width);
+                        if !grid[index] {
+                            grid.set(p.get_index(width), true);
+                            count += 1;
+                        }
+                    });
+                res2.take_while(|&p| p.x >= 0 && p.x < width && p.y >= 0 && p.y < height)
+                    .for_each(|p| {
+                        let index = p.get_index(width);
+                        if !grid[index] {
+                            grid.set(p.get_index(width), true);
+                            count += 1;
+                        }
+                    });
+            })
+    });
+    count
+}
+```
+And got this time:
+```
+Day8 - Part2/grid       time:   [14.681 µs 14.699 µs 14.719 µs]
+```
 ## Final Times
 Unlocking the CPU clock I get these final times:
 ```
 Day8 - Part1/grid       time:   [4.1539 µs 4.1578 µs 4.1626 µs]
-Day8 - Part2/grid       time:   [10.783 µs 10.796 µs 10.811 µs]
+Day8 - Part2/grid       time:   [8.4486 µs 8.4745 µs 8.5064 µs]
 ```
