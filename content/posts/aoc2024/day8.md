@@ -3,7 +3,7 @@ publishDate: 2024-12-08
 title: Day 8 - Resonant Collinearity
 author: Barr
 keywords: [Advent of Code, Rust]
-description: Counting Antinodes(What Even Are Antinodes?)
+description: Counting antinodes(what even are antinodes?)
 summary: |
   Antennas now make people buy more chocolate, but only in "antinodes", so they need to be found and counted.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day8.rs
