@@ -264,6 +264,104 @@ And the new time is:
 ```
 Day9 - Part1/skip       time:   [194.71 µs 194.99 µs 195.35 µs]
 ```
-That's a 3000x speedup, I'll take it.
+That's a 3000x speedup, but I can do better even better.
+
+## Doing Even Better - Skipping The Build, And More
+As usual, when a single iteration solves the problem, parsing the input into a new data structure is not required, I can just read each digit directly from the input and turn it into the (ID,size) pair as I'm doing everything else.  
+Initially I only replaced the code that pops from the double ended queue with code that directly accesses and parses the input(and it was already about twice as fast, but I did not do a proper benchmark), but then I had another good idea:
+I can always start the loop with an empty space in the front if I always handle the following filled space when the empty space at the front ends.  
+In this solution, in every case that the front empty space ends, instead of reading a new front digit and restarting the loop, I already know that it is an empty space so I can add it to the checksum and load another front digit as the new open space.
+```rust
+#[aoc(day9, part1, no_parse)]
+pub fn part1_no_parse(disk: &[u8]) -> u64 {
+    let mut read = (disk[0] - b'0') as u64;
+    let mut checksum = 0u64;
+    let mut front_index = 1u32;
+    let mut back_index = disk.len() as u32 - 1;
+    let mut front = disk[1] - b'0';
+    let mut back = disk[back_index as usize] - b'0';
+    // the body enforces the front is always empty at the start of the loop
+    loop {
+        match front.cmp(&back) {
+            // less empty than there is to fill
+            Ordering::Less => {
+                checksum += (read..read + front as u64).sum::<u64>() * (back_index / 2) as u64;
+                read += front as u64;
+                back -= front;
+                // grab a new front number
+                front_index += 1;
+                if front_index < back_index {
+                    // next is filled file
+                    front = disk[front_index as usize] - b'0';
+                    checksum += (read..read + front as u64).sum::<u64>() * (front_index / 2) as u64;
+                    read += front as u64;
+                    // next is empty
+                    front_index += 1;
+                    front = disk[front_index as usize] - b'0';
+                } else {
+                    checksum += (read..read + back as u64).sum::<u64>() * (back_index / 2) as u64;
+                    return checksum;
+                }
+            }
+            // exact size to fill
+            Ordering::Equal => {
+                checksum += (read..read + back as u64).sum::<u64>() * (back_index / 2) as u64;
+                read += back as u64;
+                // grab a new front number
+                front_index += 1;
+                if front_index < back_index {
+                    // next is filled file
+                    front = disk[front_index as usize] - b'0';
+                    checksum += (read..read + front as u64).sum::<u64>() * (front_index / 2) as u64;
+                    read += front as u64;
+                    // next is empty
+                    front_index += 1;
+                    front = disk[front_index as usize] - b'0';
+                } else {
+                    return checksum;
+                }
+                // grab a new back number, skip empty files
+                back_index -= 2;
+                if front_index < back_index {
+                    back = disk[back_index as usize] - b'0';
+                } else {
+                    return checksum;
+                }
+            }
+            // more empty than there is to fill,
+            // the only case reading a new file from the front is not needed
+            Ordering::Greater => {
+                checksum += (read..read + back as u64).sum::<u64>() * (back_index / 2) as u64;
+                read += back as u64;
+                front -= back;
+                // grab a new back number, skip empty files
+                back_index -= 2;
+                if front_index < back_index {
+                    back = disk[back_index as usize] - b'0';
+                } else {
+                    return checksum;
+                }
+            }
+        }
+    }
+}
+```
+And..
+```
+Day9 - Part1/no_parse   time:   [71.052 µs 71.145 µs 71.249 µs]
+```
+That's almost another 3x.
+
+One last idea that I had was to replace the `- b'0'` with `& 15u8` since all digits will be converted to the same value, but looks like that's a little slower:
+```
+Day9 - Part1/no_parse   time:   [72.036 µs 72.106 µs 72.193 µs]
+```
+So I'll stop there.
 
 ## Final Times
+Unlocking the CPU clock, the final times for today are:
+```
+Day9 - Part1/no_parse   time:   [41.861 µs 42.149 µs 42.466 µs]
+Day9 - Part2/first      time:   [27.686 ms 27.727 ms 27.773 ms]
+```
+I'm pretty satisfied with the part 1 time and essentially gave up on optimizing part 2.
