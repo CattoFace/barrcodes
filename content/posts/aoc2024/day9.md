@@ -165,6 +165,8 @@ If the empty space is exactly the right size, no new empty file is needed.
 
 This solution needed a ton of debugging, but eventually I got it.
 
+## Trusting The Compiler
+
 ## Optimizations
 I have some ideas how to improve part 2, but I don't have the time for that, maybe someone else will take the ideas I applied to part 1 and apply them to part 2.  
 Initial times(with the CPU clock locked to `2.6Ghz`):
@@ -357,6 +359,11 @@ One last idea that I had was to replace the `- b'0'` with `& 15u8` since all dig
 Day9 - Part1/no_parse   time:   [72.036 µs 72.106 µs 72.193 µs]
 ```
 So I'll stop there.
+
+## Trusting The Compiler
+Throughout the solutions, I used `(read..read+X as u64).sum::<u64>()` to sum the indices, on it's surface this seems very inefficient, but in reality this operation pretty much always gets optimized to the well known mathematical formula `(first-last+1)(first+last)/2`(for the right side open range).  
+I've implemented the formula myself to compare and could measure no real difference.  
+Unfortunately, at the moment `perf` still refuses to work correctly so I can't inspect the produced assembly instructions.
 
 ## Final Times
 Unlocking the CPU clock, the final times for today are:
