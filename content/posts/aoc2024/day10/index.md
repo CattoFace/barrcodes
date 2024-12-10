@@ -43,7 +43,7 @@ pub fn part1_first(input: &[u8]) -> u32 {
         .sum()
 }
 ```
-And `find_trailhead_score` is a simple [BFS](https://en.wikipedia.org/wiki/Depth-first_search) algorithm, that only goes on valid trails:
+And `find_trailhead_score` is a simple [DFS](https://en.wikipedia.org/wiki/Depth-first_search) algorithm, that only goes on valid trails:
 ```rust
 fn find_trailhead_score(input: &[u8], start: usize, width: usize, height: usize) -> u32 {
     let mut queue = Vec::new();
