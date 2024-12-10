@@ -5,7 +5,7 @@ author: Barr
 keywords: [Advent of Code, Rust]
 description: The first pathfinding day.
 summary: |
-  Today's challange is a simple pathfinding one: find routes in increasing heights on a topological map.
+  Today's challange is a simple pathfinding one: find paths in increasing heights on a topological map.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day10.rs
 ---
 ## Input
