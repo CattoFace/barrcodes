@@ -174,10 +174,32 @@ This is even faster than the cached solution:
 Day11 - Part1/grouped   time:   [105.27 µs 105.36 µs 105.45 µs]
 Day11 - Part2/grouped   time:   [4.9255 ms 4.9305 ms 4.9365 ms]
 ```
+At this point I tried to reduce allocations by preallocating big enough `HashMap`s, the exact amount of slots varies based on the algorithm and part(for example, the single hash map solution for part 2 was set to 150k to avoid any reallocations, and the other part 2 `HashMap`s were set to 5k).  
+This significantly improved the solutions of all the cached solutions:
+```
+Day11 - Part1/cached(OLD)            time:   [135.03 µs 135.14 µs 135.24 µs]
+Day11 - Part1/cached                 time:   [95.527 µs 95.740 µs 95.993 µs]
+Day11 - Part1/cached_multicache(OLD) time:   [145.63 µs 147.01 µs 148.82 µs]
+Day11 - Part1/cached_multicache      time:   [78.156 µs 78.462 µs 78.840 µs]
+Day11 - Part2/cached(OLD)            time:   [10.313 ms 10.336 ms 10.362 ms]
+Day11 - Part2/cached                 time:   [5.1566 ms 5.1696 ms 5.1894 ms]
+Day11 - Part2/cached_multicache(OLD) time:   [8.6433 ms 8.6509 ms 8.6587 ms]
+Day11 - Part2/cached_multicache      time:   [4.7614 ms 4.7750 ms 4.7904 ms]
+```
+And even helped the grouped solutions a little:
+```
+Day11 - Part1/grouped   time:   [100.12 µs 100.22 µs 100.32 µs]
+Day11 - Part2/grouped   time:   [4.7336 ms 4.7438 ms 4.7564 ms]
+```
+At this point the multi-cache solution for part 2 is about as fast as the grouped solution, and the multi-cache solution for part 1 is *faster* than the grouped solution.
 
 ## Final Times
 As usual, time to unlock the CPU clock:
 ```
-Day11 - Part1/grouped   time:   [69.551 µs 69.618 µs 69.696 µs]
-Day11 - Part2/grouped   time:   [2.9574 ms 2.9594 ms 2.9616 ms]
+Day11 - Part1/cached            time:   [53.077 µs 53.438 µs 54.021 µs]
+Day11 - Part1/cached_multicache time:   [48.077 µs 48.771 µs 49.463 µs]
+Day11 - Part1/grouped           time:   [57.347 µs 57.507 µs 57.659 µs]
+Day11 - Part2/cached            time:   [2.9647 ms 2.9701 ms 2.9764 ms]
+Day11 - Part2/cached_multicache time:   [2.8079 ms 2.8120 ms 2.8163 ms]
+Day11 - Part2/grouped           time:   [3.1182 ms 3.1223 ms 3.1268 ms]
 ```
