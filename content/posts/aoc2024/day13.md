@@ -18,6 +18,7 @@ Button B: X+22, Y+67
 Prize: X=8400, Y=5400
 ```
 With an empty line between machines.  
+The prize is won if the claw is navigated to the prize coordinates, which is not possible in every machine.
 
 ## Part 1
 The goal is to return the minimum cost to win as many prizes as possible, when pressing A costs 3 and pressing B costs 1, there's a hint that buttons should not be pressed more than 100 times.
