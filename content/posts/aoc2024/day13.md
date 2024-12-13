@@ -3,7 +3,7 @@ publishDate: 2024-12-13
 title: Day 13 - Claw Contraption
 author: Barr
 keywords: [Advent of Code, Rust]
-description: Math disguised as dynamic programming, Also, you're not getting me this time AoC.
+description: Math disguised as dynamic programming, you're not getting me this time AoC.
 summary: |
   Today's challange describes a set of claw machines that are controlled by 2 buttons, and the goal is to win as many prizes as possible with as little money as possible.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day13.rs
