@@ -44,12 +44,12 @@ So all the talk about a "minimum cost" was just a misdirection to make it seem l
 With a little reordering to reuse the divisor, I converted it to the following `Rust` function:
 ```rust
 fn find_cost(a_x: i32, a_y: i32, b_x: i32, b_y: i32, x: i32, y: i32) -> Option<i32> {
-    let a_presses_numerator = x * b_y - b_x * y;
-    let b_presses_numerator = a_x * y - x * a_y;
     let divisor = a_x * b_y - b_x * a_y;
     if divisor == 0 {
         return None;
     }
+    let a_presses_numerator = x * b_y - b_x * y;
+    let b_presses_numerator = a_x * y - x * a_y;
     if a_presses_numerator % divisor == 0 && b_presses_numerator % divisor == 0 {
         Some(a_presses_numerator / divisor * 3 + b_presses_numerator / divisor)
     } else {
@@ -99,12 +99,12 @@ Prize: X=10000000008400, Y=10000000005400
 Fortunately, I didn't fall for it this time, all I need to do is add this big value to my X and Y values, and change various types to `i64` instead of `i32` to hold the bigger values I'm working with:
 ```rust {hl_lines=[1,"14-22",28]}
 fn find_cost64(a_x: i64, a_y: i64, b_x: i64, b_y: i64, x: i64, y: i64) -> Option<i64> {
-    let a_presses_numerator = x * b_y - b_x * y;
-    let b_presses_numerator = a_x * y - x * a_y;
     let divisor = a_x * b_y - b_x * a_y;
     if divisor == 0 {
         return None;
     }
+  let a_presses_numerator = x * b_y - b_x * y;
+  let b_presses_numerator = a_x * y - x * a_y;
     if a_presses_numerator % divisor == 0 && b_presses_numerator % divisor == 0 {
         Some(a_presses_numerator / divisor * 3 + b_presses_numerator / divisor)
     } else {
@@ -144,3 +144,6 @@ Almost all the remaining time is spent parsing.
 Day13 - Part1/equation  time:   [4.9378 µs 4.9709 µs 5.0269 µs]
 Day13 - Part2/equation  time:   [7.2932 µs 7.3537 µs 7.4291 µs]
 ```
+
+Turns out the `divisor == 0` check is true only when the 2 buttons send the claw in the same direction, which doesn't actually happen in my input, and might be designed to never happen in any input.  
+I tried removing the check and it did not affect the performance, probably got branch predicted well enough, so I'll just leave it there in case there is an input that makes it true.
