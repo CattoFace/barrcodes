@@ -146,4 +146,15 @@ Day13 - Part2/equation  time:   [7.2932 µs 7.3537 µs 7.4291 µs]
 ```
 
 Turns out the `divisor == 0` check is true only when the 2 buttons send the claw in the same direction, which doesn't actually happen in my input, and might be designed to never happen in any input.  
-I tried removing the check and it did not affect the performance, probably got branch predicted well enough, so I'll just leave it there in case there is an input that makes it true.
+I tried removing the check and it did not affect the performance, I'm assuming because the CPU predicted it perfectly(because it was always false in my input), so I'll just leave it there in case there is an input that makes it true.
+
+> [!NOTE] Branch Prediction
+> CPUs work in a [pipelined](https://en.wikipedia.org/wiki/Instruction_pipelining) model, meaning multiple instructions are getting executed at the same time, each at a different stage of execution.  
+> Because of that, the CPU can't simply wait for the instruction that evaluates the condition to branch, so it uses [branch prediction](https://en.wikipedia.org/wiki/Branch_predictor).  
+> The branch predictor inside the CPU just *guesses* what the next instruction should be, and continues executing from there until the condition is evaluated.  
+> If the guess was correct, all is well and the CPU continues working at full speed.  
+> If the guess was wrong, it must "flush" all the work it did since making the wrong guess and start over from the correct instruction, this leads to a few cycles being wasted.  
+>
+> Modern branch predictors are very complex(and keep getting more complex and advanced with every CPU generation) and can detect various patterns in each branch in the program in order to maximize the correct prediction rate.
+>
+> In this case, a branch that always evaluates the same way is *very* easy to predict, so it has barely any cost.
