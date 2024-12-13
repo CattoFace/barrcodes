@@ -5,7 +5,7 @@ author: Barr
 keywords: [Advent of Code, Rust]
 description: Every year needs a flood fill day.
 summary: |
-  The Elves are tryign to build fences for their gardens and need me to calculate the cost.
+  The Elves are trying to build fences for their gardens and need me to calculate the cost.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day12.rs
 ---
 Today, the Elves are asking for the cost of building fences around their gardens, each type of plant needs a fence separating it from other types, for example, plots arranged like this:

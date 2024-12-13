@@ -4,6 +4,11 @@ title = 'BarrCodes'
 disableKinds = ['taxonomy', 'term']
 cleanDestinationDir = true
 markup.highlight.noClasses = false
+[markup.goldmark.extensions.passthrough]
+enable = true
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['$$', '$$']]
+inline = [['$', '$']]
 [frontmatter]
 publishDate = ['publishDate']
 [outputFormats.main-only]
