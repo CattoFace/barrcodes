@@ -132,8 +132,13 @@ And that's all, the easiest part 2 so far.
 
 ## Performance
 There really isn't anything to optimize here, all I'm doing is parsing a couple lines, with 4 out of the 6 numbers at a static location, and doing a little math.  
-According to `perf`, 64% of the time spent in part 2 is on a 2 specific `idivq` instructions, these instructions do signed division on 64/128 bit integers(it calculates and stores the both the quotient and the remainder), a fairly expensive instruction.  
+According to `perf`, 64% of the time spent in part 2 is on 2 specific `idivq` instructions, these instructions do signed division on 64/128 bit integers, a fairly expensive instruction.  
 Almost all the remaining time is spent parsing.  
+
+> [!NOTE]
+> The `idivq`(and other integer division instructions) instruction calculates and stores both the quotient and the reminder.  
+> So the compiler can use a single instruction to get both values when some piece of code contains both `a/b` and `a%b`, so only a single division is done in these cases.
+
 32 bit division is cheaper so despite only changing types, there is a pretty big difference in the performance of the 2 parts:
 ```
 Day13 - Part1/equation  time:   [4.9378 µs 4.9709 µs 5.0269 µs]
