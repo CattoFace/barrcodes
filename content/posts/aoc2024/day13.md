@@ -38,8 +38,8 @@ A=\frac{B_x*Y-X*B_y}{B_x*A_y-A_x*B_y} \\
 B=\frac{A_x*Y-X*A_y}{A_x*B_y-B_x*A_y}
 $$
 This type of system has either 0, 1 or infinite solutions.  
-The infinite case is impossible with $A_x,A_y,B_x,B_y$ all positive(which is case in the full input), so it's either no solutions when the divisor is 0, or 1 solution otherwise.  
-So all the talk about a "minimum cost" were just a misdirection to make it seem like a harder problem than it is.  
+The infinite case is impossible with $A_x,A_y,B_x,B_y$ all positive(which is the case in the full input), so it's either no solutions when the divisor is 0, or 1 solution otherwise.  
+So all the talk about a "minimum cost" was just a misdirection to make it seem like a harder problem than it is.  
 
 With a little reordering to reuse the divisor, I converted it to the following `Rust` function:
 ```rust
