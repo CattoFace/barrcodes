@@ -137,7 +137,8 @@ Since the question is only "how many steps until the tree appears", I don't even
 
 Unlike most days, this solution probably has *some* input that results in a false positive(one of the drawbacks of this algorithm), unless the challenge writer specifically generated the input for that to never happen.
 
-So when told to look for a tree, I simply looked for the frame, and it worked.
+So when told to look for a tree, I simply looked for the frame, and it worked.  
+Looking at other solutions, many people rely on there being no robots at the same place at the correct amount of steps, exploiting they way the input was generated.
 
 ## Performance
 Part 1 is pretty fast, just like yesterday- parse and math, not a lot to it.  
