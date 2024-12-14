@@ -3,7 +3,7 @@ publishDate: 2024-12-14
 title: Day 14 - Restroom Redoubt
 author: Barr
 keywords: [Advent of Code, Rust]
-description: An relatively simple part 1, an extremely evil part 2.
+description: A relatively simple part 1, an extremely evil part 2.
 summary: |
   Just tracking some robots moving in diagonal lines, how bad could it be?
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day14.rs
@@ -64,7 +64,8 @@ pub fn part1_first(mut input: &[u8]) -> u32 {
     }
 }
 ```
-Initially I made one mistake here: I used `%` instead of `rem_euclid`, the former returns negative numbers when given negative numbers and the latter returns the corresponding positive number.
+Initially I made one mistake here: I used `%` instead of `rem_euclid`, the former returns negative numbers when given negative numbers and the latter returns the corresponding positive number.  
+`fast_parsei` is a variation of the `fast_parse` I showed on day 1 that allows for a `-` sign before the number to make it negative.
 
 ## Part 2
 This part is worst designed Advent of Code challenge I've seen so far:  
