@@ -47,6 +47,7 @@ function replace_content(post_name) {
     document.getElementById("content").innerHTML = main
     if (post_name.startsWith("/posts/")) { // TODO there is probably a better way
       insert_comments()
+      MathJax.typeset()
     }
   }
 }
