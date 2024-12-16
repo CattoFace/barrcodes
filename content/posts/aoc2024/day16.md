@@ -3,7 +3,7 @@ publishDate: 2024-12-16
 title: Day 16 - Reindeer Maze
 author: Barr
 keywords: [Advent of Code, Rust]
-description: The first Diskstra day
+description: The first Dijkstra day
 summary: |
   Today's challange is just a maze, but turning has a cost.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day16.rs
