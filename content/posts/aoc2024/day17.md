@@ -94,7 +94,7 @@ I first tried writing a *reverse* interpreter that will read the instructions in
 Unfortunately, today also requires looking directly at the input looking for assumptions that can help:
 
 - Turns out every input ends with a `jnz A,0` instruction, meaning "repeat the whole program if A is not 0", and no other jumps.  
-- Every iteration read the bottom 3 bits of A, and later shift A right by 3 bits.instruction.
+- Every iteration read the bottom 3 bits of A, and later shift A right by 3 bits.
 - A few more bits from A will be read, and a few XOR operations will be done that involve that B and C registers(but never A), and at some point there will be a single print from B or C.
 - This means A is never written to, and it's bottom 3 bits are removed at each iteration.  
 
@@ -129,7 +129,7 @@ let output_table: Vec<_> = (0usize..TABLE_SIZE)
 ```
 This version of the interpreter already incorporates the assumptions into it's implementation, it doesn't even read the last instruction.  
 
-The next step is to create the starting set of possible A values that can print the last instruction operand:
+Now I can create the set of possible A values that can print the last instruction operand:
 ```rust
 let mut possible_a: Vec<_> = output_table
     .iter()
@@ -144,7 +144,7 @@ let mut possible_a: Vec<_> = output_table
     .collect();
 ```
 
-And finally, for each number in the instruction, this `possible_a` vector is rebuilt from the previous `possible_a` vector being converted to the possible A values that can become one of the previous `possible_a` values **and** print the number:
+And finally, for each number in the instruction, this `possible_a` vector is rebuilt from the previous `possible_a` vector: for every A value in the vector, I test if I can add any 3 bits to it and print the previous number I needed to:
 ```rust
 for &to_output in instructions[..instructions.len() - 1].iter().rev() {
     possible_a = possible_a
@@ -165,7 +165,7 @@ for &to_output in instructions[..instructions.len() - 1].iter().rev() {
         .collect();
 }
 ```
-Turns out this method can return multiple possible A values after it finishes, so I simply returned the first one(which is always the smallest one), and it worked.
+Turns out this method can return multiple possible A values after it finishes all of the iterations, so I simply returned the first one(which is always the smallest one), and it worked.
 
 ## Optimizations
 Starting times:
