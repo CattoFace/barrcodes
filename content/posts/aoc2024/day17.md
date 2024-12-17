@@ -5,7 +5,7 @@ author: Barr
 keywords: [Advent of Code, Rust]
 description: A simple interpreter, until it isnt.
 summary: |
-  Part 1 has gives a simple program to interpret, part 2 makes it a lot harder.
+  Part 1 has a simple program to interpret, part 2 makes it a lot more complex.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day17.rs
 ---
 ## Input
