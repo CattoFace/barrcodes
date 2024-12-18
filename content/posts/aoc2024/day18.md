@@ -89,7 +89,44 @@ fn part2_first_inner(mut input: &[u8]) -> (usize, usize) {
     (x, y)
 }
 ```
-`can_reach_end` is a copy of the algorithm from part 1 that returns `true` if the end was found, and `false` if the queue emptied without reaching the end.
+`can_reach_end` is a similar algorithm to the one part 1, but simpler, it returns `true` if the end was found, and `false` if the queue emptied without reaching the end, so it doesn't need to track path distances.  
+Additionally, it uses a single queue and implements [DFS](https://en.wikipedia.org/wiki/Depth-first_search) instead of BFS:
+```rust
+fn can_reach_end(map: [bool; SIZE * SIZE]) -> bool {
+    let mut queue = Vec::new();
+    let mut queue_next = Vec::new();
+    queue.push((0usize, 0usize, 0usize));
+    let mut visited = [false; SIZE * SIZE];
+    visited[0] = true;
+    loop {
+        while let Some((pos, pos_x, pos_y)) = queue.pop() {
+            if pos == SIZE * SIZE - 1 {
+                return true;
+            }
+            if pos_x > 0 && !map[pos - 1] && !visited[pos - 1] {
+                visited[pos - 1] = true;
+                queue_next.push((pos - 1, pos_x - 1, pos_y));
+            }
+            if pos_x < SIZE - 1 && !map[pos + 1] && !visited[pos + 1] {
+                visited[pos + 1] = true;
+                queue_next.push((pos + 1, pos_x + 1, pos_y));
+            }
+            if pos_y > 0 && !map[pos - SIZE] && !visited[pos - SIZE] {
+                visited[pos - SIZE] = true;
+                queue_next.push((pos - SIZE, pos_x, pos_y - 1));
+            }
+            if pos_y < SIZE - 1 && !map[pos + SIZE] && !visited[pos + SIZE] {
+                visited[pos + SIZE] = true;
+                queue_next.push((pos + SIZE, pos_x, pos_y + 1));
+            }
+        }
+        if queue_next.is_empty() {
+            return false;
+        }
+        std::mem::swap(&mut queue, &mut queue_next);
+    }
+}
+```
 
 This method worked, but it is very slow(I'm not going to bother with locking the CPU clock today):
 ```
