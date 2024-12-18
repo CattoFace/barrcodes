@@ -103,6 +103,7 @@ When the queue is empty, every path has been evaluated and I can return the posi
 ```rust
 fn part2_better_inner(mut input: &[u8]) -> (usize, usize) {
     let mut map = [u32::MAX; SIZE * SIZE];
+    // used for short circuiting paths that meet an existing path with a higher min_on_path
     let mut reachable_with = [0u32; SIZE * SIZE];
     let mut order = Vec::new();
     for i in 0u32.. {
@@ -164,3 +165,59 @@ This leads to another big improvement:
 ```
 Day18 - Part2/better    time:   [3.8324 ms 3.8385 ms 3.8448 ms]
 ```
+
+### An Even Better Solution
+Even before this "better" solution, I thought about doing a binary search for the correct value, but did not have a good idea about how to hold the state of the board at every time step, but now that I have this `map` that I fill with the step each position was blocked on, I can clearly see how to implement the binary search.  
+
+First, the outer function will simply call the search function and return the position that was blocked at the step it picked:
+```rust
+fn part2_binsearch_inner(mut input: &[u8]) -> (usize, usize) {
+    let mut free_until = [u32::MAX; SIZE * SIZE];
+    let mut order = Vec::new();
+    for i in 0u32.. {
+        let (x, rem) = fast_parse::<usize>(input);
+        let (y, rem) = fast_parse::<usize>(&rem[1..]);
+        free_until[y * SIZE + x] = i;
+        order.push((x, y));
+        if rem.is_empty() {
+            break;
+        }
+        input = &rem[1..];
+    }
+    let result = perform_binsearch(free_until, order.len() as u32);
+    order[result as usize]
+}
+```
+The binary search is like any other, keeps a start and end index and checks the middle until they meet:
+```rust
+fn perform_binsearch(free_until: [u32; SIZE * SIZE], mut end: u32) -> u32 {
+    let mut start = 1024u32;
+    while start != end {
+        let middle = (start + end) / 2;
+        if can_reach_end2(free_until, middle) {
+            start = middle + 1;
+        } else {
+            end = middle;
+        }
+    }
+    end
+}
+```
+And finally, the check itself is a copy of `can_reach_end`, that instead of checking the boolean `map[pos]`, checks if the given threshold is less than the value in the given map, for example:
+```rust
+if pos_x > 0 && max_threshold < open_until[pos - 1] && !visited[pos - 1] {
+    visited[pos - 1] = true;
+    queue_next.push((pos - 1, pos_x - 1, pos_y));
+}
+```
+
+It may seem like doing multiple searches will take more than the single search from the "better" solution, but:
+
+- In the "better" solution, paths had a lot less things to stop them, since they simply continued through blocked positions while remembering their blocked step.
+- Binary search needs `log2(start-end)` searches, and in this case, that means 12 searches, not so bad.
+
+And the performance on this solution is impressive:
+```
+Day18 - Part2/binary_search time:   [92.474 µs 92.723 µs 93.011 µs]
+```
+Not even close to 12x the part 1 time, mostly because part 1 needed to keep track of the distance, and not just reachability.
