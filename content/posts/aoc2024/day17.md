@@ -102,30 +102,32 @@ Using these assumptions, one can work in reverse, guess random A values for the 
 
 Actually, guessing completely random A values is not necessary, it's possible to do it the other way: guess A values out of the ones whose bits before the lowest 3, printed the correct value in the previous iteration(next iteration in real execution, since it's going backwards).
 
-And finally, at least in inputs I've seen, only the bottom 11 bits of A can affect the output, so I decided to pre-calculate all of them to use when actually testing different A values.
+And finally, at least in inputs I've seen, only the bottom 10 bits of A can affect the output, so I decided to pre-calculate all of them to use when actually testing different A values.
 
 ### Implementing The Solution
-The start is the same as part 1, except parsing A is not needed, since it is not the A that is required.  
+The start is the same as part 1, except parsing A is not needed, since it is not used in part 2.  
 Then, I pre-calculated all possible input-output pairs for a single iteration of the instructions:
 ```rust
-let output_table: Vec<_> = (0usize..TABLE_SIZE)
-    .map(|a| {
-        let mut memory = [0usize, 1, 2, 3, a, 0, 0];
-        for &[opcode, operand] in instructions[..instructions.len() - 2].array_chunks() {
-            match opcode {
-                0 => memory[4] >>= memory[operand],
-                1 => memory[5] ^= operand,
-                2 => memory[5] = memory[operand] % 8,
-                4 => memory[5] ^= memory[6],
-                5 => return memory[operand] % 8,
-                6 => memory[5] = memory[4] >> memory[operand],
-                7 => memory[6] = memory[4] >> memory[operand],
-                _ => unreachable!("invalid program"),
-            }
-        }
-        unreachable!()
-    })
-    .collect();
+const TABLE_SIZE: usize = 1<<10;
+...
+  let output_table: Vec<_> = (0usize..TABLE_SIZE)
+      .map(|a| {
+          let mut memory = [0usize, 1, 2, 3, a, 0, 0];
+          for &[opcode, operand] in instructions[..instructions.len() - 2].array_chunks() {
+              match opcode {
+                  0 => memory[4] >>= memory[operand],
+                  1 => memory[5] ^= operand,
+                  2 => memory[5] = memory[operand] % 8,
+                  4 => memory[5] ^= memory[6],
+                  5 => return memory[operand] % 8,
+                  6 => memory[5] = memory[4] >> memory[operand],
+                  7 => memory[6] = memory[4] >> memory[operand],
+                  _ => unreachable!("invalid program"),
+              }
+          }
+          unreachable!()
+      })
+      .collect();
 ```
 This version of the interpreter already incorporates the assumptions into it's implementation, it doesn't even read the last instruction.  
 
@@ -171,7 +173,7 @@ Turns out this method can return multiple possible A values after it finishes al
 Starting times:
 ```
 Day17 - Part1/(default) time:   [428.60 ns 428.89 ns 429.21 ns]
-Day17 - Part2/table     time:   [1.1985 ms 1.2088 ms 1.2193 ms]
+Day17 - Part2/table     time:   [552.69 µs 553.84 µs 554.97 µs]
 ```
 
 I first tried rewriting part 1 using the assumptions that I found in part 2:
@@ -249,8 +251,8 @@ for &to_output in instructions[..instructions.len() - 1].iter().rev() {
 
 Turns out reusing the table saves a ton of time, even if I'm spending a long time generating it:
 ```
-Day17 - Part2/table     time:   [1.1985 ms 1.2088 ms 1.2193 ms]
-Day17 - Part2/no_table  time:   [12.983 ms 13.005 ms 13.040 ms]
+Day17 - Part2/table     time:   [552.69 µs 553.84 µs 554.97 µs]
+Day17 - Part2/no_table  time:   [6.5481 ms 6.5564 ms 6.5657 ms]
 ```
 
 So no improvements today.  
@@ -258,7 +260,7 @@ So no improvements today.
 ## Final Times
 Unlocking the CPU clock:
 ```
-Day17 - Part1/(default) time:   [267.57 ns 267.77 ns 268.01 ns]
-Day17 - Part2/table     time:   [705.74 µs 706.17 µs 706.58 µs]
+Day17 - Part1/(default) time:   [257.98 ns 258.06 ns 258.16 ns]
+Day17 - Part2/table     time:   [330.02 µs 330.97 µs 332.48 µs]
 ```
 The fastest part 1 time so far, along with one of the slowest part 2 time.
