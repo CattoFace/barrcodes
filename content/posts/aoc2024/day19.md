@@ -26,7 +26,9 @@ ubwu
 ```
 Can't be made with any combination of towels.
 
-## Part 1
+## Initial Solutions
+
+### Part 1
 In part 1 the output is simply how many patterns are possible.  
 First, the parsing of the available towers and the outer function call:
 ```rust
@@ -107,7 +109,7 @@ fn verify_potential_pattern<'a>(
 Note the lifetime I needed to add to make the compiler let put the patterns in the cache.  
 This version actually finishes in a few milliseconds and gives the correct answer.
 
-## Part 2
+### Part 2
 This is only a small variation on part 1: how many ways can each potential pattern be created from towels.  
 To solve this, only a few changes need to be made to part 1:
 ```rust
@@ -246,7 +248,7 @@ Day19 - Part1/rayon     time:   [1.3631 ms 1.3739 ms 1.3875 ms]
 Day19 - Part2/rayon     time:   [5.4504 ms 5.4968 ms 5.5453 ms]
 ```
 
-## Part 2 Rewrite: No More Recursion
+### Part 2 Rewrite: No More Recursion
 The new version that uses a vector as a cache gave me an idea: solving it using dynamic programming.  
 Fairly simple function that computes the amount of ways to build each length of pattern:
 ```rust
@@ -334,7 +336,7 @@ And looking at the assembly instructions again, the `pushq` instructions are gon
 The part 2 instructions did not generate the `pushq` instructions inside the iterators to begin with.
 
 
-## Hash-Set Patterns
+### Hash-Set Patterns
 This last improvement I got from Discord:  
 Storing the patterns inside a Hash-Set allows checking if a specific pattern exists very fast, the issue is that given a potential pattern, the specific pattern to search inside the set is unknown, because it could be any prefix of the potential pattern.  
 The answer is simple: just check *every* prefix up to the longest pattern in the set.  
