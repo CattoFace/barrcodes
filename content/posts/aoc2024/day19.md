@@ -381,10 +381,10 @@ Day19 - Part1/hashset         time:   [1.0393 ms 1.0396 ms 1.0398 ms]
 Day19 - Part1/rayon           time:   [712.35 µs 725.29 µs 741.61 µs]
 Day19 - Part1/hashset_rayon   time:   [106.73 µs 107.82 µs 108.90 µs]
 
-Day19 - Part2/rayon           time:   [4.5303 ms 4.5367 ms 4.5432 ms]
-Day19 - Part2/hashset_rayon   time:   [404.66 µs 406.93 µs 409.73 µs]
-
 Day19 - Part2/rewrite         time:   [24.403 ms 24.439 ms 24.475 ms]
 Day19 - Part2/rewrite_hashset time:   [2.2961 ms 2.2976 ms 2.2991 ms]
+
+Day19 - Part2/rayon           time:   [4.5303 ms 4.5367 ms 4.5432 ms]
+Day19 - Part2/hashset_rayon   time:   [404.66 µs 406.93 µs 409.73 µs]
 ```
 And that's all for today.
