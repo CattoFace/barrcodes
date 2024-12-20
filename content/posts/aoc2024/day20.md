@@ -3,7 +3,7 @@ publishDate: 2024-12-20
 title: Day 20 - Race Condition
 author: Barr
 keywords: [Advent of Code, Rust]
-description: Yet Another Maze
+description: Yet Another Maze.
 summary: |
   Maze solving has gotten boring even for these robots, so they started cheating.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day20.rs
