@@ -50,7 +50,9 @@ Pressing an arrow key will move the finger in that direction, pressing `A` will 
 
 That keypad can only be pressed by *another* robot, which, like the first one, starts with it's finger on the `A` button.
 
-The robot that controls it is controlled by an identical keypad, which **can** be pressed directly.
+That robot is controlled by an identical keypad, which can only be pressed by yet another robot.
+
+The keypad that controls *that* robot, can be pressed directly.
 
 Each code's "complexity" is the minimum amount of inputs required to input it(on the final keypad that can be pressed directly), multiplied by the number in the code itself.
 
