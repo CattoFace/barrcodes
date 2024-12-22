@@ -3,7 +3,7 @@ publishDate: 2024-12-21
 title: Day 21 - Keypad Conundrum
 author: Barr
 keywords: [Advent of Code, Rust]
-description: A 121-armed match followed by 2 1000 lines long lookup tables.
+description: A 121-armed match followed by 2 1000 lines long lookup table definitions.
 summary: |
   The goal is simple: input a code into a numpad, using a robot, that is controlled by another robot, that is controlled by another robot...
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day21.rs
