@@ -297,4 +297,4 @@ This version is by far the fastest in both parts between all days:
 Day21 - Part1/(default) time:   [7.6939 ns 7.7111 ns 7.7284 ns]
 Day21 - Part2/(default) time:   [7.6811 ns 7.6994 ns 7.7198 ns]
 ```
-That's an `n`, for nanoseconds, not microseconds like most solution so far, it is 45000x faster than the original version, ignoring the fact `hyperfine` sometimes overestimates.
+That's an `n`, for nanoseconds, not microseconds like most solution so far, it is 45000x faster than the original version, ignoring the fact `hyperfine` sometimes overestimates a little.
