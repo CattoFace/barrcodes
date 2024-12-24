@@ -5,7 +5,7 @@ author: Barr
 keywords: [Advent of Code, Rust]
 description: Building a logic circuit
 summary: |
-  The elves monitoring device is malfunctioning and as always, its my job to figure out what went wrong.
+  The elves monitoring device is malfunctioning, and as always, its my job to figure out what went wrong.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day24.rs
 ---
 ## Input
