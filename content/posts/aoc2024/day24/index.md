@@ -1,5 +1,5 @@
 ---
-publishDate: 2024-12-23
+publishDate: 2024-12-24
 title: Day 24 - Crossed Wires
 author: Barr
 keywords: [Advent of Code, Rust]
