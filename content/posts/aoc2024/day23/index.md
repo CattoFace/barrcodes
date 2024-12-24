@@ -142,6 +142,7 @@ Starting runtime:
 Day23 - Part1/(default) time:   [69.748 µs 70.336 µs 71.405 µs]
 Day23 - Part2/(default) time:   [53.423 ms 53.521 ms 53.622 ms]
 ```
+### A Few Adjustments
 I've tried using HashMaps in part 1 instead of vectors, and find the groups using this code:
 ```rust
 for neighs in &neighbours[..26] {
@@ -163,7 +164,8 @@ Next, `included` doesn't actually need to be a set, a vector works just as well 
 Day23 - Part2/(default) time:   [15.181 ms 15.243 ms 15.323 ms]
 ```
 
-And finally, turns out a very naive algorithm that doesn't do a huge amount of allocations is a lot faster:  
+### A New Approach - Brute-Force
+Turns out a very naive algorithm that doesn't do a huge amount of allocations is a lot faster:  
 First, it appears that the max clique size is always 13, so the goal is finding the vertices that form it.  
 Additionally, the simplest way to find a clique is to take any 13 vertices, and for every pair in that group, verify they share an edge.  
 Taking just *any* 13 will be slow, so I started by iterating over the vertices, and looked for ones with at least 12 neighbours.  
@@ -202,3 +204,50 @@ This implementation is surprisingly fast:
 ```
 Day23 - Part2/brute_force time:   [198.98 µs 200.28 µs 202.85 µs]
 ```
+### HashSets Are Still Slow
+Looking at a [flamegraph](brute_force_flamegraph.svg) of this solution, I can see that 73% of the time is spent inserting into the HashSets, so I updated it to use both a vector, so I can easily obtain a neighbours list, and an adjacency matrix, so I can easily query for edges:
+```rust
+
+pub fn part2_brute_adj(input: &[u8]) -> String {
+    let mut neighbours: [Vec<usize>; 26 * 26] = from_fn(|_| Default::default());
+    let mut neighbours_adj = bitarr![0usize;26*26*26*26];
+    ...
+    neighbours[comp1].push(comp2);
+    neighbours[comp2].push(comp1);
+    neighbours_adj.set(adj1, true);
+    neighbours_adj.set(adj2, true);
+```
+And both of those are passed into the updated `brute_force_clique`.
+
+This is a little faster:
+```
+Day23 - Part2/adj       time:   [155.96 µs 156.31 µs 156.76 µs]
+```
+But now, according to the [flamegraph](adj_flamegraph.svg), almost 40% of the time is spent allocating and deallocating the vectors.
+The simplest way to solve this is to pre-allocate the vectors, preferably on the stack.  
+
+### Preallocating Vectors
+Pre-allocating all the vectors with a capacity of 15(which was picked after a couple tests):
+```rust
+let mut neighbours: [Vec<usize>; 26 * 26] = from_fn(|_| Vec::with_capacity(15));
+```
+Makes is twice as  fast:
+```
+Day23 - Part2/adj       time:   [74.418 µs 74.495 µs 74.582 µs]
+```
+Using `ArrayVec` from `tinyvec`, I can create the vectors with a static capacity on the stack, risks a panic for an input with too many edges on one vertex, but worked for me:
+```rust
+let mut neighbours: [ArrayVec<[usize; 15]>; 26 * 26] = from_fn(|_| Default::default());
+```
+```
+Day23 - Part2/adj       time:   [58.316 µs 58.395 µs 58.481 µs]
+```
+And now the [flamegraph](final_flamegraph.svg) is looking a lot better.
+
+### Back To Part 1
+Seeing how beneficial `ArrayVec` was, I tried to use it in part 1 as well, before even checking the flamegraph, and as expected, it made it twice as fast:
+```
+Day23 - Part1/(default) time:   [34.437 µs 34.621 µs 34.883 µs]
+```
+
+That's all I've got for today.
