@@ -3,7 +3,7 @@ publishDate: 2024-12-25
 title: Day 25 - Code Chronicle
 author: Barr
 keywords: [Advent of Code, Rust]
-description: A simple lock-picking for the last day.
+description: A simple one for the last day.
 summary: |
   The chief historian is nowhere to be found, going back to his office, it appears to be locked, and North Pole Security doesn't know which key is correct.
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day25.rs
