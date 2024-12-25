@@ -9,8 +9,8 @@ summary: |
 github: https://github.com/CattoFace/aoc2024/blob/main/src/day25.rs
 ---
 ## Input
-The input contains schematics of both locks and keys mixed together, locks have the top row filled with `#` and the keys have the bottom row filled with `#`.
-For example, a few locks keys:
+The input contains schematics of both locks and keys mixed together, locks have the top row filled with `#` and the keys have the bottom row filled with `#`.  
+For example, a few locks and  keys:
 ```
 #####
 .####
